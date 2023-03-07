@@ -5,10 +5,11 @@ import { useEffect } from "react";
 import { socket } from "@utils/socket";
 import { SignUpPage } from "@pages/auth/signup";
 import { LoginPage } from "@pages/auth/login";
+import { CreateRoomPage } from "@pages/rooms/create-room";
 
 const router = createBrowserRouter([
   { index: true, loader: indexPageLoader, element: <IndexPage /> },
-  { path: "/room/:id", loader: async ({ params }) => params.id, element: <></> },
+  { path: "/room/create", element: <CreateRoomPage /> },
   {
     path: "/auth",
     children: [

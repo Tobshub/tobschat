@@ -1,7 +1,7 @@
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 
 export async function indexPageLoader() {
@@ -13,6 +13,12 @@ export async function indexPageLoader() {
 }
 
 export default function IndexPage() {
+  const navigate = useNavigate();
+  // user joins a room with their id
+  useEffect(() => {
+    socket.emit("user:load", getToken());
+  }, []);
+
   // const roomInput = useRef<HTMLInputElement>(null);
   // const [rooms, setRooms] = useState<{ id: string; name: string }[]>([]);
 
@@ -44,13 +50,20 @@ export default function IndexPage() {
   const roomsQuery = trpc.user.userRooms.useQuery();
 
   useEffect(() => {
-    socket.emit("user:load", getToken());
+    // refetch when the user is added to a room
+    socket.on("room:new", () => {
+      roomsQuery.refetch();
+    });
+    return () => {
+      socket.off("room:new");
+    };
   }, []);
 
   return (
-    <div>
+    <div className="page">
       <h1>TobsChat</h1>
-      {roomsQuery.isLoading ? (
+      <button onClick={() => navigate("/room/create")}>NEW ROOM</button>
+      {roomsQuery.isInitialLoading ? (
         <>Loading...</>
       ) : (
         <ul>
