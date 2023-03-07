@@ -28,11 +28,11 @@ export async function createRoom(token: string, roomProps: { name: string; other
         name: roomProps.name,
         members: { connect: [{ id: otherMember.id }, { id: validate.data.id }] },
       },
-      select: { id: true, memberIds: true },
+      select: { id: true },
     });
 
     // emit socket event to tell client to refetch
-    room.memberIds.forEach((id) => io.to(id).emit("room:new"));
+    io.to(otherMember.id).emit("room:new");
 
     // don't pass memberIds back to the user
     return Ok(room.id);
