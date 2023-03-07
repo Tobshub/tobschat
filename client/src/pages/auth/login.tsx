@@ -34,16 +34,22 @@ export function LoginPage() {
           type="email"
           placeholder="user@example.com"
           onChange={(e) => handleChange("email", e.target.value)}
+          required
         />
       </div>
       <div className="form-group mb-3">
         <label>Password:</label>
-        <input className="form-control" type="password" onChange={(e) => handleChange("password", e.target.value)} />
+        <input
+          className="form-control"
+          type="password"
+          required
+          onChange={(e) => handleChange("password", e.target.value)}
+        />
       </div>
       <p>
         Don't have an account? <Link to={"../sign-up"}>Sign Up</Link> instead.
       </p>
-      <button className="btn btn-outline-success" disabled={loginMut.isLoading || loginMut.isSuccess}>
+      <button type="submit" className="btn btn-outline-success" disabled={loginMut.isLoading}>
         Log In
       </button>
     </AuthForm>

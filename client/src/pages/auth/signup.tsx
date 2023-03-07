@@ -29,11 +29,12 @@ export function SignUpPage() {
       {formError ? <small className="alert alert-danger py-1">{formError}</small> : null}
       <div className="form-group mb-3">
         <label>Username:</label>
-        <input className="form-control" onChange={(e) => handleChange("username", e.target.value)} />
+        <input className="form-control" required onChange={(e) => handleChange("username", e.target.value)} />
       </div>
       <div className="form-group mb-3">
         <label>Email:</label>
         <input
+          required
           className="form-control"
           type="email"
           placeholder="user@example.com"
@@ -42,12 +43,19 @@ export function SignUpPage() {
       </div>
       <div className="form-group mb-3">
         <label>Password:</label>
-        <input className="form-control" type="password" onChange={(e) => handleChange("password", e.target.value)} />
+        <input
+          className="form-control"
+          type="password"
+          onChange={(e) => handleChange("password", e.target.value)}
+          required
+          minLength={8}
+          maxLength={64}
+        />
       </div>
       <p>
         Already have an account? <Link to={"../login"}>Log In</Link> instead.
       </p>
-      <button className="btn btn-outline-success" disabled={signupMut.isLoading || signupMut.isSuccess}>
+      <button type="submit" className="btn btn-outline-success" disabled={signupMut.isLoading}>
         Sign Up
       </button>
     </AuthForm>
