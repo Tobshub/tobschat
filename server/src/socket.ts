@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import LOG from "./config/log";
 import registerUserHandlers from "./api/user/handler";
+import registerRoomHandlers from "./api/room/handler";
 
 const rooms: { room_id: string; name: string }[] = [];
 
@@ -14,6 +15,7 @@ export default function socketHandler(io: Server) {
     LOG("info", "Established Socket Connection", socket.id);
 
     registerUserHandlers(io, socket);
+    registerRoomHandlers(io, socket);
   });
 }
 
