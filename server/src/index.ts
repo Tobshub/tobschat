@@ -13,7 +13,6 @@ PrismaConn();
 export const env = {
   port: process.env.PORT,
   jwt_secret: process.env.JWT_SECRET,
-  db_uri: process.env.DATABASE_URL,
 };
 
 const app = express();
@@ -22,7 +21,7 @@ appHandler(app);
 
 const httpServer = createServer(app);
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: { origin: "*" },
 });
 
