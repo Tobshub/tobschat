@@ -7,7 +7,9 @@ import { getToken } from "./token";
 
 export const trpc = createTRPCReact<AppRouter>();
 
-const appQueryClient = new QueryClient();
+const appQueryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnMount: false, refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
+});
 
 const trpcClient = trpc.createClient({
   links: [httpBatchLink({ url: "http://localhost:8008/api", headers: () => ({ authorization: getToken() }) })],
