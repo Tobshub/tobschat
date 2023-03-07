@@ -6,7 +6,7 @@ import { getUserRooms } from "./controller/rooms";
 
 export const userRouter = tRouter({
   new: tProcedure
-    .input(z.object({ email: z.string().email(), password: z.string(), username: z.string() }))
+    .input(z.object({ email: z.string().email(), password: z.string().min(8).max(64), username: z.string() }))
     .mutation(async ({ input }) => {
       const res = await newUser(input);
       if (res.ok) {
