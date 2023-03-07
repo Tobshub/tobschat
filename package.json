@@ -1,0 +1,17 @@
+{
+  "name": "tobschat",
+  "version": "0.0.1",
+  "description": "chat app built with socket.io, react and express + trpc",
+  "repository": "https://github.com/Tobshub/tobschat.git",
+  "author": "Tobshub <tobanigeorge@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start:client": "cd client && yarn dev",
+    "start:server": "cd server && yarn dev",
+    "dev": "concurrently \"yarn:start:*\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
+
