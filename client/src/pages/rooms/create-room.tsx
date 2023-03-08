@@ -11,7 +11,6 @@ export function CreateRoomPage() {
   const createRoomMut = trpc.room.createRoom.useMutation({
     onSuccess(res) {
       if (res.ok) {
-        trpc.user.userRooms.useQuery().refetch();
         navigate(`/room/${res.data}`);
       } else {
         setErrorMessage(res.message);

@@ -6,10 +6,17 @@ import { socket } from "@utils/socket";
 import { SignUpPage } from "@pages/auth/signup";
 import { LoginPage } from "@pages/auth/login";
 import { CreateRoomPage } from "@pages/rooms/create-room";
+import { RoomPage, roomPageLoader } from "@pages/rooms/room";
 
 const router = createBrowserRouter([
   { index: true, loader: indexPageLoader, element: <IndexPage /> },
-  { path: "/room/create", element: <CreateRoomPage /> },
+  {
+    path: "/room",
+    children: [
+      { path: "create", element: <CreateRoomPage /> },
+      { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
+    ],
+  },
   {
     path: "/auth",
     children: [

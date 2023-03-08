@@ -2,7 +2,7 @@ import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
 import { useEffect } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 
 export async function indexPageLoader() {
   const token = getToken();
@@ -50,7 +50,7 @@ export default function IndexPage() {
   const roomsQuery = trpc.user.userRooms.useQuery();
 
   useEffect(() => {
-    // refetch when the user is added to a room
+    // FIXIT: refetch when the user is added to a room
     socket.on("room:new", () => {
       roomsQuery.refetch();
     });
@@ -70,7 +70,9 @@ export default function IndexPage() {
           {roomsQuery.data && roomsQuery.data.data.length ? (
             roomsQuery.data.data.map((room) => (
               <li key={room.id}>
-                <button className="btn btn-outline-secondary">{room.name}</button>
+                <Link to={`/room/${room.id}`} className="btn btn-outline-secondary">
+                  {room.name}
+                </Link>
               </li>
             ))
           ) : (

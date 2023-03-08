@@ -8,7 +8,7 @@ import { getToken } from "./token";
 export const trpc = createTRPCReact<AppRouter>();
 
 const appQueryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnMount: false, refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
+  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
 });
 
 const trpcClient = trpc.createClient({
