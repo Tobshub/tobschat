@@ -11,8 +11,10 @@ const appQueryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
 });
 
+const url = import.meta.env.PROD ? "https://tobschat-api.onrender.com/" : "http://localhost:8008/api";
+
 const trpcClient = trpc.createClient({
-  links: [httpBatchLink({ url: "http://localhost:8008/api", headers: () => ({ authorization: getToken() }) })],
+  links: [httpBatchLink({ url, headers: () => ({ authorization: getToken() }) })],
 });
 
 /** trpc and react-query providers wrapper function */
