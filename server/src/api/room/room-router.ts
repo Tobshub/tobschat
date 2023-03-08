@@ -2,6 +2,7 @@ import { z } from "zod";
 import { tError, tProcedure, tRouter } from "../../config/trpc";
 import { createRoom } from "./controllers/create-room";
 import { getRoom } from "./controllers/get-room";
+import { sendMessage } from "./controllers/send-message";
 
 export const roomRouter = tRouter({
   createRoom: tProcedure
@@ -49,5 +50,25 @@ export const roomRouter = tRouter({
       }
     }
   }),
+  sendMessage: tProcedure
+    .input(z.object({ content: z.string().min(1), roomId: z.string(), key: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.auth) throw new tError({ code: "BAD_REQUEST", message: "user token is missing" });
+
+      const res = await sendMessage(ctx.auth, input);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "an error occured": {
+          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+        }
+        case "failed to validate token": {
+          throw new tError({ code: "UNAUTHORIZED", message: res.message });
+        }
+      }
+    }),
 });
 

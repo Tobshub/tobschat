@@ -19,12 +19,24 @@ export function RoomPage() {
   // TODO: diff messages by user
   const [messages, setMessage] = useState(room.data?.data.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
+  const sendMessageMut = trpc.room.sendMessage.useMutation({
+    onError(err) {
+      console.error(err);
+    },
+  });
+
+  useEffect(() => {
+    if (room.data) {
+      setMessage(room.data.data.messages);
+    }
+  }, [room.data]);
 
   const sendMessage = () => {
     const message = { key: genId(), content: newMessage, createdAt: new Date().toISOString(), roomId };
     socket.emit("room:message", message, getToken());
     setMessage((state) => [...state, message]);
     // FIXIT: update messages in the db for persistence
+    sendMessageMut.mutateAsync(message).catch((_) => null);
     setNewMessage("");
   };
 
