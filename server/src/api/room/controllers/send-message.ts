@@ -21,7 +21,6 @@ export async function sendMessage(token: string, messageProps: { content: string
           },
         },
       },
-      select: {},
     });
 
     return Ok({});
