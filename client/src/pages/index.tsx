@@ -1,7 +1,7 @@
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, redirect, useNavigate } from "react-router-dom";
 
 export async function indexPageLoader() {
@@ -48,16 +48,28 @@ export default function IndexPage() {
   // }, []);
 
   const roomsQuery = trpc.user.userRooms.useQuery();
+  const [rooms, setRooms] = useState(roomsQuery.data?.data ?? []);
 
   useEffect(() => {
     // FIXIT: refetch when the user is added to a room
     socket.on("room:new", () => {
-      roomsQuery.refetch();
+      roomsQuery.refetch().then(({ data }) => {
+        if (data) {
+          setRooms(data.data);
+        }
+      });
     });
     return () => {
       socket.off("room:new");
     };
   }, []);
+
+  // render on initial load
+  useEffect(() => {
+    if (roomsQuery.data) {
+      setRooms(roomsQuery.data.data);
+    }
+  }, [roomsQuery.isInitialLoading]);
 
   return (
     <div className="page">
@@ -67,8 +79,8 @@ export default function IndexPage() {
         <>Loading...</>
       ) : (
         <ul>
-          {roomsQuery.data && roomsQuery.data.data.length ? (
-            roomsQuery.data.data.map((room) => (
+          {rooms.length ? (
+            rooms.map((room) => (
               <li key={room.id}>
                 <Link to={`/room/${room.id}`} className="btn btn-outline-secondary">
                   {room.name}
