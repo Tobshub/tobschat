@@ -32,6 +32,9 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
     "typescript": "^5.0.0-beta"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
 
