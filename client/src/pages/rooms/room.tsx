@@ -48,6 +48,7 @@ export function RoomPage() {
 
     return () => {
       socket.off("room:message");
+      socket.emit("room:leave", roomId);
     };
   }, []);
 
