@@ -54,6 +54,7 @@ export function RoomPage() {
   return (
     <div className="page">
       <h2>{room.data?.data.name}</h2>
+      <small>{room.data?.data.members.map((member) => member.username).join(" || ")}</small>
       <div>
         {room.isInitialLoading ? (
           <>Loading...</>
