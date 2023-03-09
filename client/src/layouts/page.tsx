@@ -8,14 +8,13 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 export default function Page() {
   // load username to context
-  loadUsernameToContext();
+  loadUserEmailToContext();
   const navigate = useNavigate();
 
   const roomsQuery = trpc.user.userRooms.useQuery();
   const [rooms, setRooms] = useState(roomsQuery.data?.value ?? []);
 
   useEffect(() => {
-    // FIXIT: refetch when the user is added to a room
     socket.on("room:new", () => {
       roomsQuery.refetch().then(({ data }) => {
         if (data) {
@@ -92,10 +91,10 @@ export default function Page() {
   );
 }
 
-function loadUsernameToContext() {
+function loadUserEmailToContext() {
   const userContext = useContext(UserContext);
 
-  const user = trpc.user.getUser.useQuery();
+  const user = trpc.user.getUser.useQuery(undefined, { staleTime: 1000 * 60 * 60 * 30 });
   useEffect(() => {
     if (user.data) {
       userContext.setContext("email", user.data.value.email);

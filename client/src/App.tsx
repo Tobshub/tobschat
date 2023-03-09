@@ -45,7 +45,7 @@ export default function App() {
 
   const [email, setEmail] = useState("");
   const setContext = (key: string, value: string) => {
-    if (key === "username") {
+    if (key === "email") {
       setEmail(value);
     }
   };
