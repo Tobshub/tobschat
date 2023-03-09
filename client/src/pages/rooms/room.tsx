@@ -113,8 +113,15 @@ function MessageComponent(props: { content: string; createdAt: string; isMe: boo
   return (
     <div className={`message ${props.isMe ? "me" : "not-me"}`}>
       <p>{props.content}</p>
-      <small>{new Date(props.createdAt).toLocaleDateString()}</small>
+      <small>{formatMessageDate(new Date(props.createdAt))}</small>
     </div>
   );
+}
+
+function formatMessageDate(date: Date): string {
+  if (date.getTime() >= Date.now() - 1000 * 60 * 60 * 24) {
+    return date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
+  }
+  return date.toLocaleDateString();
 }
 
