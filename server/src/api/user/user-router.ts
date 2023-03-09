@@ -3,6 +3,7 @@ import z from "zod";
 import { newUser } from "./controller/new";
 import { login } from "./controller/login";
 import { getUserRooms } from "./controller/rooms";
+import { getUsername } from "./controller/username";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -56,6 +57,28 @@ export const userRouter = tRouter({
       }
       case "user not found": {
         throw new tError({ code: "NOT_FOUND", ...res });
+      }
+    }
+  }),
+  getUsername: tProcedure.query(async ({ ctx }) => {
+    if (!ctx.auth) {
+      throw new tError({ code: "BAD_REQUEST", message: "user token is missing" });
+    }
+
+    const res = await getUsername(ctx.auth);
+    if (res.ok) {
+      return res;
+    }
+
+    switch (res.message) {
+      case "failed to validate token": {
+        throw new tError({ code: "UNAUTHORIZED", message: res.message });
+      }
+      case "user not found": {
+        throw new tError({ code: "NOT_FOUND", message: res.message });
+      }
+      default: {
+        throw new tError({ code: "INTERNAL_SERVER_ERROR" });
       }
     }
   }),
