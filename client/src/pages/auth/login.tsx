@@ -16,7 +16,7 @@ export function LoginPage() {
   const loginMut = trpc.user.login.useMutation({
     onSuccess(res) {
       if (res.ok) {
-        setToken(res.data);
+        setToken(res.value);
         navigate("/");
       } else {
         setFormError("Email or Password is wrong");
@@ -46,9 +46,9 @@ export function LoginPage() {
           onChange={(e) => handleChange("password", e.target.value)}
         />
       </div>
-      <p>
+      <small style={{ display: "block" }}>
         Don't have an account? <Link to={"../sign-up"}>Sign Up</Link> instead.
-      </p>
+      </small>
       <button type="submit" className="btn btn-outline-success" disabled={loginMut.isLoading}>
         Log In
       </button>

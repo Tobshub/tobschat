@@ -16,7 +16,7 @@ export function SignUpPage() {
   const signupMut = trpc.user.new.useMutation({
     onSuccess(res) {
       if (res.ok) {
-        setToken(res.data);
+        setToken(res.value);
         navigate("/");
       } else {
         setFormError(res.message);
@@ -52,9 +52,9 @@ export function SignUpPage() {
           maxLength={64}
         />
       </div>
-      <p>
+      <small style={{ display: "block" }}>
         Already have an account? <Link to={"../login"}>Log In</Link> instead.
-      </p>
+      </small>
       <button type="submit" className="btn btn-outline-success" disabled={signupMut.isLoading}>
         Sign Up
       </button>

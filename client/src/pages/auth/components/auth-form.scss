@@ -1,4 +1,8 @@
 .auth-form {
+  max-width: 100dvw;
+  max-height: 100vh;
+  max-height: 100dvh;
+  padding: 1rem 0 0 1rem;
   form {
     width: max(80%, 500px);
     padding: 0.5rem 0.75rem;
