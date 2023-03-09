@@ -32,7 +32,7 @@ export async function createRoom(token: string, roomProps: { name: string; other
     });
 
     // emit socket event to tell client to refetch
-    io.to(otherMember.id).emit("room:new");
+    io.to([otherMember.id, validate.value.id]).emit("room:new");
 
     // don't pass memberIds back to the user
     return Ok(room.id);
