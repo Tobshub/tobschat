@@ -9,3 +9,4 @@ fi
 
 echo -e "Mongodb Server is on\n"
 
+echo -e "Starting App...\n"
