@@ -3,7 +3,7 @@ import { socket } from "@utils/socket";
 import { removeToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
 import UserContext from "context/user";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 export default function Page() {
@@ -36,13 +36,19 @@ export default function Page() {
   }, [roomsQuery.isInitialLoading]);
 
   const logoutMut = useLogout();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className={"page"}>
-      <header>
-        <Link to="/" className="navbar-brand">
-          TobsChat
-        </Link>
+      <div className="header-toggle" onClick={() => setSidebarOpen((state) => !state)}>
+        {sidebarOpen ? "<=" : "=>"}
+      </div>
+      <header style={{ display: sidebarOpen ? "block" : "none" }}>
+        <h1>
+          <Link to="/" className="navbar-brand">
+            TobsChat
+          </Link>
+        </h1>
         <button onClick={() => navigate("/room/create")} className="btn btn-warning">
           NEW ROOM
         </button>

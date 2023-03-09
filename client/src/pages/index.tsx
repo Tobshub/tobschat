@@ -18,8 +18,9 @@ export default function IndexPage() {
   }, []);
 
   return (
-    <div>
+    <div style={{ paddingTop: "1rem" }}>
       <h2>Welcome to Tobschat</h2>
+      <p>Create a new room with another member to start chatting now!</p>
     </div>
   );
 }

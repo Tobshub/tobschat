@@ -1,5 +1,13 @@
 .page {
+  position: relative;
   display: flex;
+  gap: 0.5rem;
+  padding: 1rem 0 0;
+
+  .header-toggle {
+    position: absolute;
+    top: 0;
+  }
 
   header {
     max-width: 300px;
@@ -9,6 +17,7 @@
   main {
     width: min(850px, 90%);
     overflow: hidden;
+    padding-left: 1.5rem;
   }
 }
 

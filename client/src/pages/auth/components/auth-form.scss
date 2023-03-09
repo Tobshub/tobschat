@@ -1,11 +1,14 @@
 .auth-form {
-  max-width: 100dvw;
-  max-height: 100vh;
-  max-height: 100dvh;
-  padding: 1rem 0 0 1rem;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   form {
-    width: max(80%, 500px);
-    padding: 0.5rem 0.75rem;
+    width: min(80%, 500px);
     margin: 0 auto;
   }
 }
