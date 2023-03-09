@@ -3,7 +3,7 @@ import { socket } from "@utils/socket";
 import { removeToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
 import UserContext from "context/user";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 export default function Page() {
@@ -95,14 +95,14 @@ export default function Page() {
 function loadUsernameToContext() {
   const userContext = useContext(UserContext);
 
-  const user = trpc.user.getUsername.useQuery();
+  const user = trpc.user.getUser.useQuery();
   useEffect(() => {
     if (user.data) {
-      userContext.setContext("username", user.data.value.username);
+      userContext.setContext("email", user.data.value.email);
     }
   }, [user.data]);
 
-  return [user.data?.value.username];
+  return [user.data?.value.email];
 }
 
 function useLogout() {

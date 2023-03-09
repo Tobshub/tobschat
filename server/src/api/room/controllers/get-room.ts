@@ -13,7 +13,7 @@ export async function getRoom(token: string, roomId: string) {
       where: { id: roomId },
       select: {
         name: true,
-        messages: { select: { key: true, content: true, createdAt: true, sender: { select: { username: true } } } },
+        messages: { select: { key: true, content: true, createdAt: true, sender: { select: { email: true } } } },
         members: { select: { username: true } },
         memberIds: true,
       },
@@ -26,7 +26,7 @@ export async function getRoom(token: string, roomId: string) {
       return Err("user is not a member of that room");
     }
 
-    return Ok({...room, memberIds: undefined});
+    return Ok({ ...room, memberIds: undefined });
   } catch (err) {
     LOG("error", err, "Error: failed to fetch room");
     return Err("an error occured");

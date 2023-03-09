@@ -3,7 +3,7 @@ import z from "zod";
 import { newUser } from "./controller/new";
 import { login } from "./controller/login";
 import { getUserRooms } from "./controller/rooms";
-import { getUsername } from "./controller/username";
+import { getUser } from "./controller/user-email";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -60,12 +60,12 @@ export const userRouter = tRouter({
       }
     }
   }),
-  getUsername: tProcedure.query(async ({ ctx }) => {
+  getUser: tProcedure.query(async ({ ctx }) => {
     if (!ctx.auth) {
       throw new tError({ code: "BAD_REQUEST", message: "user token is missing" });
     }
 
-    const res = await getUsername(ctx.auth);
+    const res = await getUser(ctx.auth);
     if (res.ok) {
       return res;
     }

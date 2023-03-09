@@ -1,5 +1,6 @@
 import { trpc } from "@utils/trpc";
-import { useRef, useState } from "react";
+import UserContext from "context/user";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function CreateRoomPage() {
@@ -21,6 +22,8 @@ export function CreateRoomPage() {
     },
   });
 
+  const user_email = useContext(UserContext).email;
+
   return (
     <div>
       <h1>Create a new Room</h1>
@@ -39,7 +42,8 @@ export function CreateRoomPage() {
           <input className="form-control" required ref={roomNameRef} />
         </div>
         <div className="form-group mb-3">
-          <label>Members (excluding you): </label>
+          <label>Members: </label>
+          <input readOnly disabled className="form-control mb-1" value={`You (${user_email})`} />
           <input
             className="form-control"
             required

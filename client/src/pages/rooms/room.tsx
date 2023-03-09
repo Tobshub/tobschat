@@ -22,7 +22,7 @@ function scrollBottom(ref: RefObject<HTMLDivElement>) {
 export function RoomPage() {
   const roomId = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomId);
-  const username = useContext(UserContext).username;
+  const email = useContext(UserContext).email;
   // TODO: diff messages by user
   const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
@@ -44,7 +44,7 @@ export function RoomPage() {
       content: newMessage,
       createdAt: new Date().toISOString(),
       roomId,
-      sender: { username },
+      sender: { email },
     };
     socket.emit("room:message", message, getToken());
     setMessages((state) => [...state, message]);
@@ -80,7 +80,7 @@ export function RoomPage() {
         ) : (
           <div className="chat" ref={chatContainer}>
             {messages.length ? (
-              messages.map((message) => <MessageComponent {...message} isMe={username === message.sender.username} />)
+              messages.map((message) => <MessageComponent {...message} isMe={email === message.sender.email} />)
             ) : (
               <p>No messages yet... Try saying hello</p>
             )}
