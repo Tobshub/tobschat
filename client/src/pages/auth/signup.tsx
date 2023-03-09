@@ -24,6 +24,8 @@ export function SignUpPage() {
     },
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <AuthForm next={() => signupMut.mutate(userProps)} title="Sign Up">
       {formError ? <small className="alert alert-danger py-1">{formError}</small> : null}
@@ -43,14 +45,23 @@ export function SignUpPage() {
       </div>
       <div className="form-group mb-3">
         <label>Password:</label>
-        <input
-          className="form-control"
-          type="password"
-          onChange={(e) => handleChange("password", e.target.value)}
-          required
-          minLength={8}
-          maxLength={64}
-        />
+        <div className="input-group">
+          <input
+            className="form-control"
+            type={showPassword ? "text" : "password"}
+            onChange={(e) => handleChange("password", e.target.value)}
+            required
+            minLength={8}
+            maxLength={64}
+          />
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-warning"
+            onClick={() => setShowPassword((state) => !state)}
+          >
+            {showPassword ? "HIDE PASSWORD" : "SHOW PASSWORD"}
+          </button>
+        </div>
       </div>
       <small style={{ display: "block" }}>
         Already have an account? <Link to={"../login"}>Log In</Link> instead.
