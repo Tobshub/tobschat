@@ -1,7 +1,9 @@
+import "@assets/room.scss";
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import { useEffect, useRef, useState } from "react";
+import UserContext from "context/user";
+import { RefObject, useContext, useEffect, useRef, useState } from "react";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 
 export async function roomPageLoader({ params }: LoaderFunctionArgs) {
@@ -13,11 +15,16 @@ function genId() {
   return (Math.random() + 1).toString(36).substring(2);
 }
 
+function scrollBottom(ref: RefObject<HTMLDivElement>) {
+  ref.current?.scrollBy({ behavior: "smooth", top: ref.current?.scrollHeight });
+}
+
 export function RoomPage() {
   const roomId = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomId);
+  const username = useContext(UserContext).username;
   // TODO: diff messages by user
-  const [messages, setMessage] = useState(room.data?.data.messages ?? []);
+  const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
   const sendMessageMut = trpc.room.sendMessage.useMutation({
     onError(err) {
@@ -27,15 +34,20 @@ export function RoomPage() {
 
   useEffect(() => {
     if (room.data) {
-      setMessage(room.data.data.messages);
+      setMessages(room.data.value.messages);
     }
   }, [room.data]);
 
   const sendMessage = () => {
-    const message = { key: genId(), content: newMessage, createdAt: new Date().toISOString(), roomId };
+    const message = {
+      key: genId(),
+      content: newMessage,
+      createdAt: new Date().toISOString(),
+      roomId,
+      sender: { username },
+    };
     socket.emit("room:message", message, getToken());
-    setMessage((state) => [...state, message]);
-    // FIXIT: update messages in the db for persistence
+    setMessages((state) => [...state, message]);
     sendMessageMut.mutateAsync(message).catch((_) => null);
     setNewMessage("");
   };
@@ -43,7 +55,7 @@ export function RoomPage() {
   useEffect(() => {
     socket.emit("room:join", roomId);
     socket.on("room:message", (message) => {
-      setMessage((state) => [...state, message]);
+      setMessages((state) => [...state, message]);
     });
 
     return () => {
@@ -52,17 +64,23 @@ export function RoomPage() {
     };
   }, []);
 
+  const chatContainer = useRef<HTMLDivElement>(null);
+  // scroll to the bottom when new messages come in
+  useEffect(() => {
+    scrollBottom(chatContainer);
+  }, [messages]);
+
   return (
-    <div className="page">
-      <h2>{room.data?.data.name}</h2>
-      <small>{room.data?.data.members.map((member) => member.username).join(" || ")}</small>
+    <div className="room">
+      <h2>{room.data?.value.name}</h2>
+      <small>{room.data?.value.members.map((member) => member.username).join(" || ")}</small>
       <div>
         {room.isInitialLoading ? (
           <>Loading...</>
         ) : (
-          <div>
+          <div className="chat" ref={chatContainer}>
             {messages.length ? (
-              messages.map((message) => <MessageComponent {...message} />)
+              messages.map((message) => <MessageComponent {...message} isMe={username === message.sender.username} />)
             ) : (
               <p>No messages yet... Try saying hello</p>
             )}
@@ -91,11 +109,11 @@ export function RoomPage() {
   );
 }
 
-function MessageComponent(props: { content: string; createdAt: string }) {
+function MessageComponent(props: { content: string; createdAt: string; isMe: boolean }) {
   return (
-    <div>
+    <div className={`message ${props.isMe ? "me" : "not-me"}`}>
       <p>{props.content}</p>
-      <time>{props.createdAt}</time>
+      <small>{new Date(props.createdAt).toLocaleDateString()}</small>
     </div>
   );
 }
