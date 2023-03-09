@@ -13,7 +13,11 @@ export async function getRoom(token: string, roomId: string) {
       where: { id: roomId },
       select: {
         name: true,
-        messages: { select: { key: true, content: true, createdAt: true, sender: { select: { email: true } } } },
+        messages: {
+          take: 50,
+          orderBy: { createdAt: "asc" },
+          select: { key: true, content: true, createdAt: true, sender: { select: { email: true } } },
+        },
         members: { select: { username: true } },
         memberIds: true,
       },
@@ -32,4 +36,3 @@ export async function getRoom(token: string, roomId: string) {
     return Err("an error occured");
   }
 }
-
