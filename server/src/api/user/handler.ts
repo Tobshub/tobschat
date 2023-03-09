@@ -7,7 +7,7 @@ export default function registerUserHandlers(io: Server, socket: Socket) {
     const user = appToken.validate(token);
     if (user.ok) {
       // join a room under the user's perm id
-      await socket.join(user.data.id);
+      await socket.join(user.value.id);
     }
   });
 }

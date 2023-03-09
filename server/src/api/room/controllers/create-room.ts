@@ -19,14 +19,14 @@ export async function createRoom(token: string, roomProps: { name: string; other
     if (!otherMember) {
       return Err("Tried to create a room with a non-user");
     }
-    if (otherMember.id === validate.data.id) {
+    if (otherMember.id === validate.value.id) {
       return Err("Cannot create a room with yourself");
     }
 
     const room = await usePrisma.room.create({
       data: {
         name: roomProps.name,
-        members: { connect: [{ id: otherMember.id }, { id: validate.data.id }] },
+        members: { connect: [{ id: otherMember.id }, { id: validate.value.id }] },
       },
       select: { id: true },
     });

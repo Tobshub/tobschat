@@ -17,7 +17,7 @@ export async function sendMessage(token: string, messageProps: { content: string
           create: {
             content: messageProps.content,
             key: messageProps.key,
-            sender: { connect: { id: validate.data.id } },
+            sender: { connect: { id: validate.value.id } },
           },
         },
       },

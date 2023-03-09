@@ -2,7 +2,7 @@
  * 
  * Implies operation success
  */
-export const Ok = <const T>(data: T) => ({ok: true, data}) as const;
+export const Ok = <const T>(value: T) => ({ok: true, value}) as const;
 /** Negative Result type
  * 
  * Implies operation failure

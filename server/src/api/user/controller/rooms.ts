@@ -11,7 +11,7 @@ export async function getUserRooms(token: string) {
     }
 
     const user = await usePrisma.user.findUnique({
-      where: { id: validate.data.id },
+      where: { id: validate.value.id },
       select: { rooms: { select: { id: true, name: true } } },
     });
 

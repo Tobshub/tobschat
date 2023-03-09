@@ -11,7 +11,7 @@ export function CreateRoomPage() {
   const createRoomMut = trpc.room.createRoom.useMutation({
     onSuccess(res) {
       if (res.ok) {
-        navigate(`/room/${res.data}`);
+        navigate(`/room/${res.value}`);
       } else {
         setErrorMessage(res.message);
       }
@@ -22,7 +22,7 @@ export function CreateRoomPage() {
   });
 
   return (
-    <div className="page">
+    <div>
       <h1>Create a new Room</h1>
       {errorMessage && <small className="alert alert-danger py-1">{errorMessage}</small>}
       <form
