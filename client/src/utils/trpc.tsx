@@ -4,6 +4,7 @@ import type { AppRouter } from "../../../server/src/api/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { getToken } from "./token";
+import { server_url } from "../data/api";
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -11,10 +12,8 @@ const appQueryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
 });
 
-const url = import.meta.env.PROD ? "https://tobschat-api.onrender.com/api" : "http://localhost:8008/api";
-
 const trpcClient = trpc.createClient({
-  links: [httpBatchLink({ url, headers: () => ({ authorization: getToken() }) })],
+  links: [httpBatchLink({ url: server_url + "/api", headers: () => ({ authorization: getToken() }) })],
 });
 
 /** trpc and react-query providers wrapper function */
