@@ -13,7 +13,7 @@ export async function getRoom(token: string, roomId: string) {
       where: { id: roomId },
       select: {
         name: true,
-        messages: { select: { key: true, content: true, createdAt: true } },
+        messages: { select: { key: true, content: true, createdAt: true, sender: { select: { username: true } } } },
         members: { select: { username: true } },
         memberIds: true,
       },
@@ -22,11 +22,11 @@ export async function getRoom(token: string, roomId: string) {
     if (!room) {
       return Err("room does not exist");
     }
-    if (!room.memberIds.includes(validate.data.id)) {
+    if (!room.memberIds.includes(validate.value.id)) {
       return Err("user is not a member of that room");
     }
 
-    return Ok(room);
+    return Ok({...room, memberIds: undefined});
   } catch (err) {
     LOG("error", err, "Error: failed to fetch room");
     return Err("an error occured");
