@@ -1,0 +1,14 @@
+.page {
+  display: flex;
+
+  header {
+    max-width: 300px;
+    padding: 1rem 0 0 1rem;
+  }
+
+  main {
+    width: min(850px, 90%);
+    overflow: hidden;
+  }
+}
+

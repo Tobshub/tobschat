@@ -30,7 +30,7 @@ body,
 .page {
   max-width: 100vw;
   max-width: 100dvw;
-  min-height: 100vh;
-  padding: 2rem 0 0 2rem;
+  max-height: 100vh;
+  max-height: 100dvh;
 }
 
