@@ -1,5 +1,6 @@
 import "@assets/page.scss";
 import { socket } from "@utils/socket";
+import { removeToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
 import UserContext from "context/user";
 import { useState, useEffect, useContext } from "react";
@@ -34,6 +35,8 @@ export default function Page() {
     }
   }, [roomsQuery.isInitialLoading]);
 
+  const logoutMut = useLogout();
+
   return (
     <div className={"page"}>
       <header>
@@ -65,6 +68,9 @@ export default function Page() {
             </ul>
           )}
         </nav>
+        <button className="btn btn-danger" onClick={logoutMut}>
+          LOGOUT
+        </button>
       </header>
       <main>
         <Outlet />
@@ -84,5 +90,13 @@ function loadUsernameToContext() {
   }, [user.data]);
 
   return [user.data?.value.username];
+}
+
+function useLogout() {
+  const navigate = useNavigate();
+  return () => {
+    removeToken();
+    navigate("/auth/login");
+  };
 }
 
