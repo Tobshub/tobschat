@@ -28,14 +28,21 @@ export default function Page() {
     };
   }, []);
 
+  const logoutMut = useLogout();
+
   // render on initial load
   useEffect(() => {
     if (roomsQuery.data) {
       setRooms(roomsQuery.data.value);
+    } else if (
+      roomsQuery.error?.message === "user not found" ||
+      roomsQuery.error?.message === "failed to validate token"
+    ) {
+      // force logout on not found || validation errors
+      logoutMut();
     }
   }, [roomsQuery.isInitialLoading]);
 
-  const logoutMut = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
