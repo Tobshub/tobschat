@@ -1,20 +1,29 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import IndexPage, { indexPageLoader } from "./pages";
-import TRPCProvider from "@utils/trpc";
-import { useEffect } from "react";
+import TRPCProvider, { trpc } from "@utils/trpc";
+import { useEffect, useState } from "react";
 import { socket } from "@utils/socket";
 import { SignUpPage } from "@pages/auth/signup";
 import { LoginPage } from "@pages/auth/login";
 import { CreateRoomPage } from "@pages/rooms/create-room";
 import { RoomPage, roomPageLoader } from "@pages/rooms/room";
+import Page from "layouts/page";
+import UserContext from "context/user";
 
 const router = createBrowserRouter([
-  { index: true, loader: indexPageLoader, element: <IndexPage /> },
   {
-    path: "/room",
+    path: "/",
+    element: <Page />,
+    loader: indexPageLoader /* go to /auth if token is missing */,
     children: [
-      { path: "create", element: <CreateRoomPage /> },
-      { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
+      { index: true, element: <IndexPage /> },
+      {
+        path: "/room",
+        children: [
+          { path: "create", element: <CreateRoomPage /> },
+          { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
+        ],
+      },
     ],
   },
   {
@@ -32,10 +41,20 @@ export default function App() {
     return () => {
       socket.disconnect();
     };
-  });
+  }, []);
+
+  const [username, setUsername] = useState("");
+  const setContext = (key: string, value: string) => {
+    if (key === "username") {
+      setUsername(value);
+    }
+  };
+
   return (
     <TRPCProvider>
-      <RouterProvider router={router} />
+      <UserContext.Provider value={{ username: username, setContext }}>
+        <RouterProvider router={router} />
+      </UserContext.Provider>
     </TRPCProvider>
   );
 }
