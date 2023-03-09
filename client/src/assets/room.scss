@@ -19,12 +19,14 @@
       border-radius: 5px;
       p {
         margin: 0;
+        font-weight: 600;
       }
       &.me {
-        background-color: red;
+        background-color: hsla(0, 0%, 100%, 0.3);
       }
       &.not-me {
-        background-color: blue;
+        background-color: hsla(0, 91%, 43%, 0.3);
+        color: white;
       }
     }
   }
