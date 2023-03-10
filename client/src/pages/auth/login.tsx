@@ -22,6 +22,9 @@ export function LoginPage() {
         setFormError("Email or Password is wrong");
       }
     },
+    onError() {
+      setFormError("An error occured! Please try again later");
+    },
   });
 
   return (

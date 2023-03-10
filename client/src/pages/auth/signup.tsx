@@ -22,6 +22,9 @@ export function SignUpPage() {
         setFormError(res.message);
       }
     },
+    onError() {
+      setFormError("An error occured! Please try again later.");
+    },
   });
 
   const [showPassword, setShowPassword] = useState(false);
