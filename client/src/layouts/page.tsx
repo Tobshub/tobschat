@@ -44,50 +44,62 @@ export default function Page() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const [isDisconnected, forceConnect] = socketStatus();
+
   return (
-    <div className={"page"}>
-      <div className="header-toggle" onClick={() => setSidebarOpen((state) => !state)}>
-        {sidebarOpen ? "<=" : "=>"}
+    <>
+      {isDisconnected && (
+        <div className="alert alert-danger alert-sm py-0">
+          <span className=" fs-6 text-muted">Server connection timed out!</span>
+          <button className="btn btn-link py-0" onClick={forceConnect}>
+            Re-connect
+          </button>
+        </div>
+      )}
+      <div className={"page"}>
+        <div className="header-toggle" onClick={() => setSidebarOpen((state) => !state)}>
+          {sidebarOpen ? "<=" : "=>"}
+        </div>
+        <header style={{ display: sidebarOpen ? "block" : "none" }}>
+          <h1>
+            <Link to="/" className="navbar-brand">
+              TobsChat
+            </Link>
+          </h1>
+          <button onClick={() => navigate("/room/create")} className="btn btn-warning">
+            NEW ROOM
+          </button>
+          <nav className="navbar">
+            {roomsQuery.isInitialLoading ? (
+              <>Loading...</>
+            ) : (
+              <ul className="navbar-nav">
+                {rooms.length ? (
+                  rooms.map((room) => (
+                    <li key={room.id} className="nav-item">
+                      <NavLink
+                        to={`/room/${room.id}`}
+                        className={({ isActive }) => `${isActive ? "bg-primary" : ""} nav-link px-2`}
+                      >
+                        {room.name}
+                      </NavLink>
+                    </li>
+                  ))
+                ) : (
+                  <>Nothing to see here...</>
+                )}
+              </ul>
+            )}
+          </nav>
+          <button className="btn btn-danger" onClick={logoutMut}>
+            LOGOUT
+          </button>
+        </header>
+        <main>
+          <Outlet />
+        </main>
       </div>
-      <header style={{ display: sidebarOpen ? "block" : "none" }}>
-        <h1>
-          <Link to="/" className="navbar-brand">
-            TobsChat
-          </Link>
-        </h1>
-        <button onClick={() => navigate("/room/create")} className="btn btn-warning">
-          NEW ROOM
-        </button>
-        <nav className="navbar">
-          {roomsQuery.isInitialLoading ? (
-            <>Loading...</>
-          ) : (
-            <ul className="navbar-nav">
-              {rooms.length ? (
-                rooms.map((room) => (
-                  <li key={room.id} className="nav-item">
-                    <NavLink
-                      to={`/room/${room.id}`}
-                      className={({ isActive }) => `${isActive ? "bg-primary" : ""} nav-link px-2`}
-                    >
-                      {room.name}
-                    </NavLink>
-                  </li>
-                ))
-              ) : (
-                <>Nothing to see here...</>
-              )}
-            </ul>
-          )}
-        </nav>
-        <button className="btn btn-danger" onClick={logoutMut}>
-          LOGOUT
-        </button>
-      </header>
-      <main>
-        <Outlet />
-      </main>
-    </div>
+    </>
   );
 }
 
@@ -108,7 +120,32 @@ function useLogout() {
   const navigate = useNavigate();
   return () => {
     removeToken();
+    socket.offAny();
+    socket.emit("user:logout");
     navigate("/auth/login");
   };
+}
+
+function socketStatus() {
+  const [isDisconnected, setIsDisconnected] = useState(false);
+  const forceConnect = () => socket.connect();
+
+  useEffect(() => {
+    socket.on("disconnect", () => {
+      console.log("DISCONN!");
+      setIsDisconnected(true);
+    });
+    socket.on("connect", () => {
+      console.log("CONN!");
+      setIsDisconnected(false);
+    });
+
+    () => {
+      socket.off("disconnect");
+      socket.off("connect");
+    };
+  }, []);
+
+  return [isDisconnected, forceConnect] as const;
 }
 
