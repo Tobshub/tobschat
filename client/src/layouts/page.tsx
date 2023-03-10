@@ -27,7 +27,7 @@ export default function Page() {
     };
   }, []);
 
-  const logoutMut = useLogout();
+  const userLogout = useLogout();
 
   // render on initial load
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Page() {
       roomsQuery.error?.message === "failed to validate token"
     ) {
       // force logout on not found || validation errors
-      logoutMut();
+      userLogout();
     }
   }, [roomsQuery.isInitialLoading]);
 
@@ -91,7 +91,7 @@ export default function Page() {
               </ul>
             )}
           </nav>
-          <button className="btn btn-danger" onClick={logoutMut}>
+          <button className="btn btn-danger" onClick={userLogout}>
             LOGOUT
           </button>
         </header>
@@ -103,6 +103,7 @@ export default function Page() {
   );
 }
 
+/** Load the user's email to `UserContext` */
 function loadUserEmailToContext() {
   const userContext = useContext(UserContext);
 
@@ -116,6 +117,12 @@ function loadUserEmailToContext() {
   return [user.data?.value.email];
 }
 
+/** Logout from the App
+ *
+ * Remove the user token from storage
+ *
+ * Stop listening to all socket events
+ */
 function useLogout() {
   const navigate = useNavigate();
   return () => {
@@ -126,6 +133,7 @@ function useLogout() {
   };
 }
 
+/** Monitor socket status and let user know if the connection status is bad */
 function socketStatus() {
   const [isDisconnected, setIsDisconnected] = useState(false);
   const forceConnect = () => socket.connect();

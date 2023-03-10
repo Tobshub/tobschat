@@ -6,6 +6,7 @@ import { PropsWithChildren } from "react";
 import { getToken } from "./token";
 import { server_url } from "../data/api";
 
+/*** App trpc client */
 export const trpc = createTRPCReact<AppRouter>();
 
 const appQueryClient = new QueryClient({
