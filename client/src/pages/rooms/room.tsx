@@ -75,17 +75,15 @@ export function RoomPage() {
       <h2>{room.data?.value.name}</h2>
       <small>{room.data?.value.members.map((member) => member.username).join(" || ")}</small>
       <div>
-        {room.isInitialLoading ? (
-          <>Loading...</>
-        ) : (
-          <div className="chat" ref={chatContainer}>
-            {messages.length ? (
-              messages.map((message) => <MessageComponent {...message} isMe={email === message.sender.email} />)
-            ) : (
-              <p>No messages yet... Try saying hello</p>
-            )}
-          </div>
-        )}
+        <div className="chat" ref={chatContainer}>
+          {room.isInitialLoading ? (
+            <>Loading...</>
+          ) : messages.length ? (
+            messages.map((message) => <MessageComponent {...message} isMe={email === message.sender.email} />)
+          ) : (
+            <p>No messages yet... Try saying hello</p>
+          )}
+        </div>
       </div>
       <form
         onSubmit={(e) => {
@@ -93,7 +91,7 @@ export function RoomPage() {
           sendMessage();
         }}
       >
-        <div className="input-group">
+        <div className="input-group mb-3">
           <input
             placeholder="type message..."
             className="form-control"
