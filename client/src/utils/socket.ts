@@ -1,4 +1,4 @@
-import { server_url } from "data/api";
+import { server_url } from "@data/api";
 import { io } from "socket.io-client";
 
 /**
