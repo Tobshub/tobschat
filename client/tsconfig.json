@@ -15,16 +15,17 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "rootDir": "..",
     "baseUrl": "./src",
     "paths": {
-      "@server/*": ["../../server/*"],
+      "@server/*": ["../../server/src/*"],
       "@utils/*": ["./utils/*"],
       "@pages/*": ["./pages/*"],
       "@assets/*": ["./assets/*"],
       "@data/*": ["./data/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../server/src", "../server/node_modules/.prisma/client"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 
