@@ -23,7 +23,6 @@ function scrollBottom(ref: RefObject<HTMLDivElement>) {
 export function RoomPage() {
   const roomId = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomId);
-  //  FIXIT: use publicId instead of username
   const publicId = store.get("publicId");
   const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
