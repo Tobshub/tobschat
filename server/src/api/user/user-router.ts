@@ -3,7 +3,7 @@ import z from "zod";
 import { newUser } from "./controller/user/new";
 import { login } from "./controller/user/login";
 import { getUserRooms } from "./controller/user/rooms";
-import { getUserPrivate, getUserPublic } from "./controller/user/get-user";
+import { getUserPrivate } from "./controller/user/get-user";
 import { getFriendRequests } from "./controller/friend/get-requests";
 
 export const userRouter = tRouter({
@@ -61,33 +61,7 @@ export const userRouter = tRouter({
       }
     }
   }),
-  getUserPublic: tProcedure.query(async ({ ctx }) => {
-    if (!ctx.auth) {
-      throw new tError({ code: "BAD_REQUEST", message: "user token is missing" });
-    }
-
-    const res = await getUserPublic(ctx.auth);
-    if (res.ok) {
-      return res;
-    }
-
-    switch (res.message) {
-      case "failed to validate token": {
-        throw new tError({ code: "UNAUTHORIZED", message: res.message });
-      }
-      case "user not found": {
-        throw new tError({ code: "NOT_FOUND", message: res.message });
-      }
-      default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
-      }
-    }
-  }),
-  getUserPrivate: tProcedure.query(async ({ ctx }) => {
-    if (!ctx.auth) {
-      throw new tError({ code: "BAD_REQUEST", message: "user token is missing" });
-    }
-
+  getUserPrivate: authedProcedure.query(async ({ ctx }) => {
     const res = await getUserPrivate(ctx.auth);
     if (res.ok) {
       return res;
