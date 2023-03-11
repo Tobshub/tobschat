@@ -27,7 +27,7 @@ export default function Page() {
       )}
       <div className={"page"}>
         <div className="header-toggle" onClick={() => setSidebarOpen((state) => !state)}>
-          {sidebarOpen ? "<=" : "=>"}
+          {sidebarOpen ? "<-" : "->"}
         </div>
         <SidebarComponent sidebarOpen />
         <main>
