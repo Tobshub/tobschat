@@ -4,12 +4,9 @@
     "module": "commonjs" /* Specify what module code is generated. */,
     "rootDir": "./src" /* Specify the root folder within your source files. */,
     "resolveJsonModule": true /* Enable importing .json files. */,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@config/*": ["./config/*"],
-      "@api/*": ["./api/*"],
-      "@helpers/*": ["./helpers/*"]
+      "@/*": ["./src/*"]
     },
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "removeComments": false /* Disable emitting comments. */,

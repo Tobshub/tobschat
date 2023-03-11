@@ -4,8 +4,8 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import socketHandler from "@/socket";
 import appHandler from "@/app";
-import LOG from "@config/log";
-import { PrismaConn } from "@config/prisma";
+import LOG from "@/config/log";
+import { PrismaConn } from "@/config/prisma";
 
 config();
 PrismaConn();
