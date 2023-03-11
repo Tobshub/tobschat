@@ -43,16 +43,14 @@ export default function App() {
     };
   }, []);
 
-  const [email, setEmail] = useState("");
-  const setContext = (key: string, value: string) => {
-    if (key === "email") {
-      setEmail(value);
-    }
-  };
+  const [context, setContextState] = useState({
+    username: "",
+  });
+  const setContext = (key: string, value: any) => setContextState((state) => ({ ...state, [key]: value }));
 
   return (
     <TRPCProvider>
-      <UserContext.Provider value={{ email, setContext }}>
+      <UserContext.Provider value={{ ...context, setContext }}>
         <RouterProvider router={router} />
       </UserContext.Provider>
     </TRPCProvider>

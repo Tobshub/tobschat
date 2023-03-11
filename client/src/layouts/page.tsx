@@ -8,7 +8,7 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 export default function Page() {
   // load username to context
-  loadUserEmailToContext();
+  loadUsernmaeToContext();
   const navigate = useNavigate();
 
   const roomsQuery = trpc.user.userRooms.useQuery();
@@ -104,17 +104,17 @@ export default function Page() {
 }
 
 /** Load the user's email to `UserContext` */
-function loadUserEmailToContext() {
+function loadUsernmaeToContext() {
   const userContext = useContext(UserContext);
 
-  const user = trpc.user.getUser.useQuery(undefined, { staleTime: 1000 * 60 * 60 * 30 });
+  const user = trpc.user.getUserPublic.useQuery(undefined, { staleTime: 1000 * 60 * 60 * 30 });
   useEffect(() => {
     if (user.data) {
-      userContext.setContext("email", user.data.value.email);
+      userContext.setContext("username", user.data.value.username);
     }
   }, [user.data]);
 
-  return [user.data?.value.email];
+  return [user.data?.value.username];
 }
 
 /** Logout from the App

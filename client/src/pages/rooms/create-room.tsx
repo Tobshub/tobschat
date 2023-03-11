@@ -22,7 +22,7 @@ export function CreateRoomPage() {
     },
   });
 
-  const user_email = useContext(UserContext).email;
+  const username = useContext(UserContext).username;
 
   return (
     <div>
@@ -43,7 +43,7 @@ export function CreateRoomPage() {
         </div>
         <div className="form-group mb-3">
           <label>Members: </label>
-          <input readOnly disabled className="form-control mb-1" value={`You (${user_email})`} />
+          <input readOnly disabled className="form-control mb-1" value={`You (${username})`} />
           <input
             className="form-control"
             required
