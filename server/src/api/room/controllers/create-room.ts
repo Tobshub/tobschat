@@ -1,8 +1,7 @@
-import { io } from "@/.";
-import LOG from "@/config/log";
-import { usePrisma } from "@/config/prisma";
-import { Err, Ok } from "@/helpers/result";
-import appToken from "@/config/token";
+import { io } from "../../..";
+import LOG from "../../../config/log";
+import { usePrisma } from "../../../config/prisma";
+import { Err, Ok } from "../../../helpers/result";
 
 export async function createRoom(userId: string, roomProps: { name: string; otherMember: string }) {
   try {

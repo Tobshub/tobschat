@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { authedProcedure, tError, tProcedure, tRouter } from "@/config/trpc";
 import { createRoom } from "./controllers/create-room";
 import { getRoom } from "./controllers/get-room";
 import { sendMessage } from "./controllers/send-message";
+import { tRouter, authedProcedure, tError } from "../../config/trpc";
 
 export const roomRouter = tRouter({
   createRoom: authedProcedure

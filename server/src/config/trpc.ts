@@ -8,7 +8,9 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => ({
   id: undefined,
 });
 
-const t = initTRPC.context<inferAsyncReturnType<typeof createContext>>().create();
+export type Context = inferAsyncReturnType<typeof createContext>;
+
+const t = initTRPC.context<Context>().create();
 
 export const tRouter = t.router;
 export const tProcedure = t.procedure;

@@ -1,4 +1,4 @@
-interface Ok<T> {
+export interface Ok<T> {
   readonly ok: true;
   readonly value: T;
 }
@@ -8,7 +8,7 @@ interface Ok<T> {
  */
 export const Ok = <const T>(value: T): Ok<T> => ({ok: true, value}) as const;
 
-interface Err<M, C> {
+export interface Err<M, C> {
   readonly ok: false;
   readonly message: M;
   readonly cause?: C;

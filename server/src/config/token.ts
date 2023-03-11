@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { env } from "@/.";
+import { env } from "..";
 import LOG from "./log";
-import { Err, Ok } from "@/helpers/result";
+import { Ok, Err } from "../helpers/result";
 
 const appToken = {
   /** Generates a jwt token */

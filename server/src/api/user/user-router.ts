@@ -1,4 +1,3 @@
-import { authedProcedure, tError, tProcedure, tRouter } from "@/config/trpc";
 import z from "zod";
 import { newUser } from "./controller/user/new";
 import { login } from "./controller/user/login";
@@ -6,6 +5,7 @@ import { getUserRooms } from "./controller/user/rooms";
 import { getUserPrivate } from "./controller/user/get-user";
 import { getFriendRequests } from "./controller/friend/get-requests";
 import { sendFriendRequest } from "./controller/friend/send-request";
+import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
 
 export const userRouter = tRouter({
   new: tProcedure

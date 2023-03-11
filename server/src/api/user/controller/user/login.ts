@@ -1,8 +1,8 @@
-import LOG from "@/config/log";
-import { usePrisma } from "@/config/prisma";
-import { Err } from "@/helpers/result";
 import b from "bcrypt";
-import appToken from "@/config/token";
+import { usePrisma } from "../../../../config/prisma";
+import LOG from "../../../../config/log";
+import appToken from "../../../../config/token";
+import { Err } from "../../../../helpers/result";
 
 export async function login(userProps: { email: string; password: string }) {
   try {

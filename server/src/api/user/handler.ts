@@ -1,5 +1,5 @@
-import { Server, Socket } from "socket.io";
 import appToken from "@/config/token";
+import { Server, Socket } from "socket.io";
 
 export default function registerUserHandlers(io: Server, socket: Socket) {
   socket.on("user:load", async (token: string) => {

@@ -1,6 +1,6 @@
-import LOG from "@/config/log";
-import { Err, Ok } from "@/helpers/result";
-import { usePrisma } from "@/config/prisma";
+import LOG from "../../../../config/log";
+import { usePrisma } from "../../../../config/prisma";
+import { Err, Ok } from "../../../../helpers/result";
 
 export async function getFriendRequests(id: string) {
   try {

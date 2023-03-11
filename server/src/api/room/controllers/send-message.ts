@@ -1,6 +1,6 @@
-import LOG from "@/config/log";
-import { usePrisma } from "@/config/prisma";
-import { Err, Ok } from "@/helpers/result";
+import LOG from "../../../config/log";
+import { usePrisma } from "../../../config/prisma";
+import { Ok, Err } from "../../../helpers/result";
 
 export async function sendMessage(messageProps: {
   senderPublicId: string;
