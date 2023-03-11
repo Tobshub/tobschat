@@ -21,7 +21,7 @@ export async function getUserRooms(token: string) {
 
     return Ok(user.rooms);
   } catch (err) {
-    LOG("error", err, "Error: failed to get user's rooms");
+    LOG.error(err, "Error: failed to get user's rooms");
     return Err("an error occured");
   }
 }

@@ -25,7 +25,7 @@ export async function sendMessage(token: string, messageProps: { content: string
 
     return Ok({});
   } catch (err) {
-    LOG("error", err, "Error: failed to send Message");
+    LOG.error(err, "Error: failed to send Message");
     return Err("an error occured");
   }
 }

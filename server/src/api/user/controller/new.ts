@@ -22,7 +22,7 @@ export async function newUser(userProps: { username: string; email: string; pass
 
     return genToken;
   } catch (error) {
-    LOG("error", error, "failed to create new user");
+    LOG.error(error, "failed to create new user");
     return Err("an error occured", error);
   }
 }

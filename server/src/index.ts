@@ -28,6 +28,6 @@ export const io = new Server(httpServer, {
 socketHandler(io);
 
 httpServer.listen(env.port, () => {
-  LOG("info", `live ::${env.port}`);
+  LOG.info(`live ::${env.port}`);
 });
 

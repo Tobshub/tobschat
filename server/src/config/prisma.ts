@@ -5,9 +5,9 @@ export const usePrisma = new PrismaClient();
 
 export async function PrismaConn() {
   try {
-    await usePrisma.$connect().then(() => LOG("info", "Connected to db with prisma"));
+    await usePrisma.$connect().then(() => LOG.info("Connected to db with prisma"));
   } catch (error) {
-    LOG("error", error, "db connection failed...");
+    LOG.error(error, "db connection failed...");
   }
 }
 

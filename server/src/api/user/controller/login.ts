@@ -25,7 +25,7 @@ export async function login(userProps: { email: string; password: string }) {
 
     return genToken;
   } catch (err) {
-    LOG("error", err, "Error: login fail");
+    LOG.error(err, "Error: login fail");
     return Err("an error occured", err);
   }
 }

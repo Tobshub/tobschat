@@ -32,7 +32,8 @@ export async function getRoom(token: string, roomId: string) {
 
     return Ok({ ...room, memberIds: undefined });
   } catch (err) {
-    LOG("error", err, "Error: failed to fetch room");
+    LOG.error(err, "Error: failed to fetch room");
     return Err("an error occured");
   }
 }
+

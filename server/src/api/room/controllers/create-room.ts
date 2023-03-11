@@ -37,7 +37,7 @@ export async function createRoom(token: string, roomProps: { name: string; other
     // don't pass memberIds back to the user
     return Ok(room.id);
   } catch (err) {
-    LOG("error", err, "Error: failed to create room");
+    LOG.error(err, "Error: failed to create room");
     return Err("an error occured", err);
   }
 }
