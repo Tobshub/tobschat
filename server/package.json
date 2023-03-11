@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec \"ts-node -r tsconfig-paths/register\" ./src/index.ts",
-    "start": "node ./dist/index.js",
+    "start": "yarn ts-node --transpileOnly -r tsconfig-paths/register src/",
     "build": "yarn && tsc"
   },
   "dependencies": {
