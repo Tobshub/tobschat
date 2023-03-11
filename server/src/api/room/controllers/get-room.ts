@@ -3,12 +3,8 @@ import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
 import appToken from "@/config/token";
 
-export async function getRoom(token: string, roomId: string) {
+export async function getRoom(userId: string, roomId: string) {
   try {
-    const validate = appToken.validate(token);
-    if (!validate.ok) {
-      return validate;
-    }
     const room = await usePrisma.room.findUnique({
       where: { id: roomId },
       select: {
@@ -26,11 +22,11 @@ export async function getRoom(token: string, roomId: string) {
     if (!room) {
       return Err("room does not exist");
     }
-    if (!room.memberIds.includes(validate.value.id)) {
+    if (!room.memberIds.includes(userId)) {
       return Err("user is not a member of that room");
     }
 
-    return Ok({ ...room, memberIds: undefined });
+    return Ok({ name: room.name, messages: room.messages, members: room.members });
   } catch (err) {
     LOG.error(err, "Error: failed to fetch room");
     return Err("an error occured");

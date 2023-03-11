@@ -4,13 +4,8 @@ import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
 import appToken from "@/config/token";
 
-export async function createRoom(token: string, roomProps: { name: string; otherMember: string }) {
+export async function createRoom(userId: string, roomProps: { name: string; otherMember: string }) {
   try {
-    const validate = appToken.validate(token);
-    if (!validate.ok) {
-      return validate;
-    }
-
     const otherMember = await usePrisma.user.findUnique({
       where: { email: roomProps.otherMember },
       select: { id: true },
@@ -19,20 +14,20 @@ export async function createRoom(token: string, roomProps: { name: string; other
     if (!otherMember) {
       return Err("Tried to create a room with a non-user");
     }
-    if (otherMember.id === validate.value.id) {
+    if (otherMember.id === userId) {
       return Err("Cannot create a room with yourself");
     }
 
     const room = await usePrisma.room.create({
       data: {
         name: roomProps.name,
-        members: { connect: [{ id: otherMember.id }, { id: validate.value.id }] },
+        members: { connect: [{ id: otherMember.id }, { id: userId }] },
       },
       select: { id: true },
     });
 
     // emit socket event to tell client to refetch
-    io.to([otherMember.id, validate.value.id]).emit("room:new");
+    io.to([otherMember.id, userId]).emit("room:new");
 
     // don't pass memberIds back to the user
     return Ok(room.id);

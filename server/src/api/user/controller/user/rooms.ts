@@ -1,17 +1,11 @@
 import LOG from "@/config/log";
 import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "@/config/token";
 
-export async function getUserRooms(token: string) {
+export async function getUserRooms(id: string) {
   try {
-    const validate = appToken.validate(token);
-    if (!validate.ok) {
-      return validate;
-    }
-
     const user = await usePrisma.user.findUnique({
-      where: { id: validate.value.id },
+      where: { id: id },
       select: { rooms: { select: { id: true, name: true } } },
     });
 

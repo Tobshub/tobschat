@@ -3,24 +3,11 @@ import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
 import appToken from "@/config/token";
 
-export async function sendMessage(token: string, messageProps: { content: string; key: string; roomId: string }) {
+export async function sendMessage(senderId: string, messageProps: { content: string; key: string; roomId: string }) {
   try {
-    const validate = appToken.validate(token);
-    if (!validate.ok) {
-      return validate;
-    }
-
-    let l = await usePrisma.room.update({
+    await usePrisma.room.update({
       where: { id: messageProps.roomId },
-      data: {
-        messages: {
-          create: {
-            content: messageProps.content,
-            key: messageProps.key,
-            sender: { connect: { id: validate.value.id } },
-          },
-        },
-      },
+      data: { messages: { push: { senderId, ...messageProps } } },
     });
 
     return Ok({});

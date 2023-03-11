@@ -1,16 +1,11 @@
 import LOG from "@/config/log";
 import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "@/config/token";
 
-export async function getUserPrivate(token: string) {
+export async function getUserPrivate(id: string) {
   try {
-    const validate = appToken.validate(token);
-    if (!validate.ok) {
-      return validate;
-    }
     const user = await usePrisma.user.findUnique({
-      where: { id: validate.value.id },
+      where: { id },
       select: {
         id: true,
         email: true,
@@ -20,7 +15,7 @@ export async function getUserPrivate(token: string) {
       },
     });
 
-    if (!user || user.id !== validate.value.id) {
+    if (!user || user.id !== id) {
       return Err("user not found");
     }
 
