@@ -1,13 +1,17 @@
 import LOG from "@/config/log";
 import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "@/config/token";
 
-export async function sendMessage(senderId: string, messageProps: { content: string; key: string; roomId: string }) {
+export async function sendMessage(messageProps: {
+  senderPublicId: string;
+  content: string;
+  key: string;
+  roomId: string;
+}) {
   try {
     await usePrisma.room.update({
       where: { id: messageProps.roomId },
-      data: { messages: { push: { senderId, ...messageProps } } },
+      data: { messages: { push: { ...messageProps } } },
     });
 
     return Ok({});

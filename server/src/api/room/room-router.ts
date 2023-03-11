@@ -42,9 +42,9 @@ export const roomRouter = tRouter({
     }
   }),
   sendMessage: authedProcedure
-    .input(z.object({ content: z.string().min(1), roomId: z.string(), key: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      const res = await sendMessage(ctx.id, input);
+    .input(z.object({ senderPublicId: z.string(), content: z.string().min(1), roomId: z.string(), key: z.string() }))
+    .mutation(async ({ input }) => {
+      const res = await sendMessage(input);
 
       if (res.ok) {
         return res;
