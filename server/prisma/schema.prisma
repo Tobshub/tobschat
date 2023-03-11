@@ -29,11 +29,18 @@ model User {
 }
 
 model FriendRequest {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  sender     User   @relation(name: "Sender", fields: [senderId], references: [id])
-  senderId   String @db.ObjectId
-  receiver   User   @relation(name: "Receiver", fields: [receiverId], references: [id])
-  receiverId String @db.ObjectId
+  id         String              @id @default(auto()) @map("_id") @db.ObjectId
+  sender     User                @relation(name: "Sender", fields: [senderId], references: [id])
+  senderId   String              @db.ObjectId
+  receiver   User                @relation(name: "Receiver", fields: [receiverId], references: [id])
+  receiverId String              @db.ObjectId
+  status     FriendRequestStatus @default(WAITING)
+}
+
+enum FriendRequestStatus {
+  ACCEPTED
+  DECLINED
+  WAITING
 }
 
 model Room {
@@ -53,9 +60,8 @@ enum RoomType {
 }
 
 type Message {
-  key       String
-  senderId  String   @db.ObjectId
-  roomId    String   @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
+  key            String
+  senderPublicId String   @db.ObjectId
+  content        String
+  createdAt      DateTime @default(now())
 }
