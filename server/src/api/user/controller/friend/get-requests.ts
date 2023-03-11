@@ -7,8 +7,12 @@ export async function getFriendRequests(id: string) {
     const user = await usePrisma.user.findUnique({
       where: { id: id },
       select: {
-        sentFriendRequests: { select: { id: true, receiver: { select: { username: true, publicId: true } } } },
-        receivedFriendRequests: { select: { id: true, sender: { select: { username: true, publicId: true } } } },
+        sentFriendRequests: {
+          select: { id: true, status: true, receiver: { select: { username: true, publicId: true } } },
+        },
+        receivedFriendRequests: {
+          select: { id: true, status: true, sender: { select: { username: true, publicId: true } } },
+        },
       },
     });
 

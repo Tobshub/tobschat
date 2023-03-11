@@ -12,6 +12,9 @@ export async function getUserPrivate(id: string) {
         username: true,
         publicId: true,
         friendsWith: { select: { username: true, publicId: true } },
+        receivedFriendRequests: {
+          select: { id: true, status: true, sender: { select: { publicId: true, username: true } } },
+        },
       },
     });
 

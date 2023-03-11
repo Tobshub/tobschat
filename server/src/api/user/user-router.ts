@@ -5,6 +5,7 @@ import { login } from "./controller/user/login";
 import { getUserRooms } from "./controller/user/rooms";
 import { getUserPrivate } from "./controller/user/get-user";
 import { getFriendRequests } from "./controller/friend/get-requests";
+import { sendFriendRequest } from "./controller/friend/send-request";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -84,6 +85,25 @@ export const userRouter = tRouter({
       }
     }
   }),
-  // sendFriendRequest: tProcedure.mutation(),
+  sendFriendRequest: authedProcedure
+    .input(z.object({ receiver: z.object({ publicId: z.string() }) }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await sendFriendRequest(ctx.id, input.receiver);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "User does not exist": {
+          throw new tError({ code: "NOT_FOUND", message: res.message });
+        }
+        default: {
+          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+        }
+      }
+    }),
+  // acceptFriendRequest:
+  // declineFriendRequest:
 });
 
