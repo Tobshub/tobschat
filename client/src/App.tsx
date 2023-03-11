@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import IndexPage, { indexPageLoader } from "./pages";
-import TRPCProvider, { trpc } from "@utils/trpc";
+import TRPCProvider from "@utils/trpc";
 import { useEffect, useState } from "react";
 import { socket } from "@utils/socket";
 import { SignUpPage } from "@pages/auth/signup";
