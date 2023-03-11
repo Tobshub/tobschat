@@ -1,14 +1,14 @@
 import "@assets/page.scss";
+import store from "@data/zustand";
 import { socket } from "@utils/socket";
 import { removeToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import UserContext from "context/user";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 
 export default function Page() {
   // load username to context
-  loadUsernmaeToContext();
+  loadUserDataToStore();
   const navigate = useNavigate();
 
   const roomsQuery = trpc.user.userRooms.useQuery();
@@ -104,15 +104,16 @@ export default function Page() {
 }
 
 /** Load the user's email to `UserContext` */
-function loadUsernmaeToContext() {
-  const userContext = useContext(UserContext);
-
-  const user = trpc.user.getUserPublic.useQuery(undefined, { staleTime: 1000 * 60 * 60 * 30 });
-  useEffect(() => {
-    if (user.data) {
-      userContext.setContext("username", user.data.value.username);
-    }
-  }, [user.data]);
+function loadUserDataToStore() {
+  const user = trpc.user.getUserPrivate.useQuery(undefined, {
+    staleTime: Infinity,
+    cacheTime: Infinity,
+    onSuccess(data) {
+      if (data.ok) {
+        store.setAll(data.value);
+      }
+    },
+  });
 
   return [user.data?.value.username];
 }

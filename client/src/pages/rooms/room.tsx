@@ -1,4 +1,5 @@
 import "@assets/room.scss";
+import store from "@data/zustand";
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
@@ -22,8 +23,8 @@ function scrollBottom(ref: RefObject<HTMLDivElement>) {
 export function RoomPage() {
   const roomId = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomId);
-  const email = useContext(UserContext).email;
-  // TODO: diff messages by user
+  //  FIXIT: use publicId instead of username
+  const publicId = store.get("publicId");
   const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
   const sendMessageMut = trpc.room.sendMessage.useMutation({
@@ -44,11 +45,11 @@ export function RoomPage() {
       content: newMessage,
       createdAt: new Date().toISOString(),
       roomId,
-      sender: { email },
+      senderPublicId: publicId,
     };
     socket.emit("room:message", message, getToken());
     setMessages((state) => [...state, message]);
-    sendMessageMut.mutateAsync(message).catch((_) => null);
+    sendMessageMut.mutateAsync(message).catch(() => null);
     setNewMessage("");
   };
 
@@ -79,7 +80,7 @@ export function RoomPage() {
           {room.isInitialLoading ? (
             <>Loading...</>
           ) : messages.length ? (
-            messages.map((message) => <MessageComponent {...message} isMe={email === message.sender.email} />)
+            messages.map((message) => <MessageComponent {...message} isMe={publicId === message.senderPublicId} />)
           ) : (
             <p>No messages yet... Try saying hello</p>
           )}
