@@ -1,9 +1,9 @@
 import { tError, tProcedure, tRouter } from "../../config/trpc";
 import z from "zod";
-import { newUser } from "./controller/new";
-import { login } from "./controller/login";
-import { getUserRooms } from "./controller/rooms";
-import { getUserPrivate, getUserPublic } from "./controller/get-user";
+import { newUser } from "./controller/user/new";
+import { login } from "./controller/user/login";
+import { getUserRooms } from "./controller/user/rooms";
+import { getUserPrivate, getUserPublic } from "./controller/user/get-user";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -104,5 +104,7 @@ export const userRouter = tRouter({
       }
     }
   }),
+  // sendFriendRequest: tProcedure.mutation(),
+  // getFriendRequests: tProcedure.query(),
 });
 

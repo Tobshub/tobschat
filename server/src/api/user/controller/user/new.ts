@@ -1,8 +1,8 @@
 import b from "bcrypt";
-import LOG from "../../../config/log";
-import { usePrisma } from "../../../config/prisma";
-import { Err } from "../../../helpers/result";
-import appToken from "./token";
+import LOG from "../../../../config/log";
+import { usePrisma } from "../../../../config/prisma";
+import { Err } from "../../../../helpers/result";
+import appToken from "../token";
 
 export async function newUser(userProps: { username: string; email: string; password: string }) {
   try {
