@@ -11,22 +11,45 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  rooms    Room[]    @relation(fields: [roomIds], references: [id])
-  roomIds  String[]  @db.ObjectId
-  username String
-  email    String    @unique
-  messages Message[]
-  password String
+  id                     String          @id @default(auto()) @map("_id") @db.ObjectId
+  rooms                  Room[]          @relation(fields: [roomIds], references: [id])
+  roomIds                String[]        @db.ObjectId
+  publicId               String          @unique @default(cuid())
+  // TODO: use the username with https://source.boringavatars.com/120/ to generate profile picture
+  username               String
+  email                  String          @unique
+  messages               Message[]
+  password               String
+  friendsWith            User[]          @relation("Friends", fields: [friendsWithIds], references: [id])
+  friendsWithIds         String[]        @db.ObjectId
+  friendsOf              User[]          @relation("Friends", fields: [friendsOfIds], references: [id])
+  friendsOfIds           String[]        @db.ObjectId
+  sentFriendRequests     FriendRequest[] @relation(name: "Sender")
+  receivedFriendRequests FriendRequest[] @relation(name: "Receiver")
+}
+
+model FriendRequest {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  sender     User   @relation(name: "Sender", fields: [senderId], references: [id])
+  senderId   String @db.ObjectId
+  receiver   User   @relation(name: "Receiver", fields: [receiverId], references: [id])
+  receiverId String @db.ObjectId
 }
 
 model Room {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  blob      String    @unique @default(cuid())
+  type      RoomType  @default(PRIVATE)
   name      String
   members   User[]    @relation(fields: [memberIds], references: [id])
   memberIds String[]  @db.ObjectId
   messages  Message[]
   updatedAt DateTime  @updatedAt
+}
+
+enum RoomType {
+  PRIVATE
+  GROUP
 }
 
 model Message {
