@@ -1,5 +1,5 @@
+import { tRouter } from "../config/trpc";
 import { roomRouter, userRouter } from "./index";
-import { tRouter } from "@/config/trpc";
 
 export const appRouter = tRouter({
   user: userRouter,

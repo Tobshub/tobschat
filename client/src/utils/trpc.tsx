@@ -1,13 +1,15 @@
 import { createTRPCReact } from "@trpc/react-query";
-import { httpBatchLink } from "@trpc/react-query";
-import type { AppRouter } from "../../../server/src/api/router";
+import { httpBatchLink } from "@trpc/client";
+import type { AppRouter } from "@server/api/router";
+import type { Context } from "@server/config/trpc";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { getToken } from "./token";
-import { server_url } from "../data/api";
+import { server_url } from "@data/api";
+import { CreateTRPCReactBase } from "@trpc/react-query/dist/createTRPCReact";
 
 /*** App trpc client */
-export const trpc = createTRPCReact<AppRouter>();
+export const trpc: CreateTRPCReactBase<AppRouter, Context> = createTRPCReact<AppRouter, Context>();
 
 const appQueryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 60 * 1000 } },
