@@ -20,7 +20,8 @@
     "react-router-dom": "^6.8.2",
     "sass": "^1.58.3",
     "socket.io-client": "^4.6.1",
-    "vite-tsconfig-paths": "^4.0.5"
+    "vite-tsconfig-paths": "^4.0.5",
+    "zustand": "^4.3.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
