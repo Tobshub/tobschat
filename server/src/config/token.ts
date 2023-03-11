@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { env } from "@/.";
-import LOG from "@/config/log";
+import LOG from "./log";
 import { Err, Ok } from "@/helpers/result";
 
 const appToken = {

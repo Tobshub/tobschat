@@ -1,7 +1,7 @@
 import LOG from "@/config/log";
 import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "../token";
+import appToken from "@/config/token";
 
 export async function getUserPublic(token: string) {
   try {

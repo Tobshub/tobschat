@@ -2,7 +2,7 @@ import { io } from "@/.";
 import LOG from "@/config/log";
 import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "@/api/user/controller/token";
+import appToken from "@/config/token";
 
 export async function createRoom(token: string, roomProps: { name: string; otherMember: string }) {
   try {

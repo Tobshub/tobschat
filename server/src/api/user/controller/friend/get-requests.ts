@@ -1,6 +1,6 @@
 import LOG from "@/config/log";
 import { Err, Ok } from "@/helpers/result";
-import appToken from "../token";
+import appToken from "@/config/token";
 import { usePrisma } from "@/config/prisma";
 
 export async function getFriendRequests(token: string) {
