@@ -18,7 +18,6 @@ model User {
   // TODO: use the username with https://source.boringavatars.com/120/ to generate profile picture
   username               String
   email                  String          @unique
-  messages               Message[]
   password               String
   friendsWith            User[]          @relation("Friends", fields: [friendsWithIds], references: [id])
   friendsWithIds         String[]        @db.ObjectId
@@ -26,6 +25,7 @@ model User {
   friendsOfIds           String[]        @db.ObjectId
   sentFriendRequests     FriendRequest[] @relation(name: "Sender")
   receivedFriendRequests FriendRequest[] @relation(name: "Receiver")
+  bio                    String          @default("Happy Chatter")
 }
 
 model FriendRequest {
@@ -52,15 +52,10 @@ enum RoomType {
   GROUP
 }
 
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+type Message {
   key       String
-  sender    User     @relation(fields: [senderId], references: [id])
   senderId  String   @db.ObjectId
-  room      Room     @relation(fields: [roomId], references: [id])
   roomId    String   @db.ObjectId
   content   String
   createdAt DateTime @default(now())
-
-  @@unique([key, roomId])
 }
