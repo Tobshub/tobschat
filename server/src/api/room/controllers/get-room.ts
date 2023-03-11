@@ -3,10 +3,10 @@ import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
 import appToken from "@/config/token";
 
-export async function getRoom(userId: string, roomId: string, cursor?: number) {
+export async function getRoom(userId: string, roomBlob: string, cursor?: number) {
   try {
     const room = await usePrisma.room.findUnique({
-      where: { id: roomId },
+      where: { blob: roomBlob },
       select: {
         name: true,
         messages: { select: { content: true, senderPublicId: true, key: true, createdAt: true } },
