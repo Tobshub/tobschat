@@ -1,7 +1,7 @@
-import LOG from "../../../config/log";
-import { usePrisma } from "../../../config/prisma";
-import { Err, Ok } from "../../../helpers/result";
-import appToken from "../../user/controller/token";
+import LOG from "@/config/log";
+import { usePrisma } from "@/config/prisma";
+import { Err, Ok } from "@/helpers/result";
+import appToken from "@/api/user/controller/token";
 
 export async function getRoom(token: string, roomId: string) {
   try {

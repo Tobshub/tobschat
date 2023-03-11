@@ -1,4 +1,4 @@
-import { tError, tProcedure, tRouter } from "../../config/trpc";
+import { tError, tProcedure, tRouter } from "@/config/trpc";
 import z from "zod";
 import { newUser } from "./controller/user/new";
 import { login } from "./controller/user/login";

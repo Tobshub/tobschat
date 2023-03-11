@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { tError, tProcedure, tRouter } from "../../config/trpc";
+import { tError, tProcedure, tRouter } from "@/config/trpc";
 import { createRoom } from "./controllers/create-room";
 import { getRoom } from "./controllers/get-room";
 import { sendMessage } from "./controllers/send-message";

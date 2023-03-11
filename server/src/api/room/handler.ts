@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import LOG from "../../config/log";
+import LOG from "@/config/log";
 
 export default function registerRoomHandlers(io: Server, socket: Socket) {
   // join a room's room to recieve all event broadcasted to it

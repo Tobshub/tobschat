@@ -1,6 +1,6 @@
-import LOG from "../../../../config/log";
-import { usePrisma } from "../../../../config/prisma";
-import { Err } from "../../../../helpers/result";
+import LOG from "@/config/log";
+import { usePrisma } from "@/config/prisma";
+import { Err } from "@/helpers/result";
 import b from "bcrypt";
 import appToken from "../token";
 

@@ -1,7 +1,7 @@
-import LOG from "../../../config/log";
-import { usePrisma } from "../../../config/prisma";
-import { Err, Ok } from "../../../helpers/result";
-import appToken from "../../user/controller/token";
+import LOG from "@/config/log";
+import { usePrisma } from "@/config/prisma";
+import { Err, Ok } from "@/helpers/result";
+import appToken from "@/api/user/controller/token";
 
 export async function sendMessage(token: string, messageProps: { content: string; key: string; roomId: string }) {
   try {

@@ -1,6 +1,6 @@
-import LOG from "../../../../config/log";
-import { usePrisma } from "../../../../config/prisma";
-import { Err, Ok } from "../../../../helpers/result";
+import LOG from "@/config/log";
+import { usePrisma } from "@/config/prisma";
+import { Err, Ok } from "@/helpers/result";
 import appToken from "../token";
 
 export async function getUserPublic(token: string) {
