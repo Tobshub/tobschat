@@ -3,18 +3,14 @@ import { usePrisma } from "@/config/prisma";
 import { Err, Ok } from "@/helpers/result";
 import appToken from "@/config/token";
 
-export async function getRoom(userId: string, roomId: string) {
+export async function getRoom(userId: string, roomId: string, cursor?: number) {
   try {
     const room = await usePrisma.room.findUnique({
       where: { id: roomId },
       select: {
         name: true,
-        messages: {
-          take: 50,
-          orderBy: { createdAt: "asc" },
-          select: { key: true, content: true, createdAt: true, sender: { select: { email: true } } },
-        },
-        members: { select: { username: true } },
+        messages: { select: { content: true, senderPublicId: true, key: true, createdAt: true } },
+        members: { select: { username: true, publicId: true } },
         memberIds: true,
       },
     });
@@ -26,7 +22,12 @@ export async function getRoom(userId: string, roomId: string) {
       return Err("user is not a member of that room");
     }
 
-    return Ok({ name: room.name, messages: room.messages, members: room.members });
+    return Ok({
+      name: room.name,
+      // send a most 50 messages to the client at once
+      messages: cursor && cursor > 0 ? room.messages.slice(cursor, cursor + 50) : room.messages.slice(0, 50),
+      members: room.members,
+    });
   } catch (err) {
     LOG.error(err, "Error: failed to fetch room");
     return Err("an error occured");
