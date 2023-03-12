@@ -8,6 +8,7 @@ import { LoginPage } from "@pages/auth/login";
 import { CreateRoomPage } from "@pages/rooms/create-room";
 import { RoomPage, roomPageLoader } from "@pages/rooms/room";
 import Page from "layouts/page";
+import { RoomListPage } from "@pages/rooms/room-list";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       {
         path: "/room",
         children: [
+          { path: "list", element: <RoomListPage /> },
           { path: "create", element: <CreateRoomPage /> },
           { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
         ],
@@ -48,4 +50,8 @@ export default function App() {
     </TRPCProvider>
   );
 }
+
+// TODO: search for users by name or publicId
+// TODO: add friends with publicId or from user search
+// TODO: create private chat with friends or start group chat with a list of friends + able to add more
 
