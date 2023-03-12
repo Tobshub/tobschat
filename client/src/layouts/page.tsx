@@ -25,10 +25,14 @@ export default function Page() {
         </div>
       )}
       <div className={"page"}>
-        <div className="header-toggle" onClick={() => setSidebarOpen((state) => !state)}>
-          {sidebarOpen ? "<-" : "->"}
+        <div>
+          <div className="" onClick={() => setSidebarOpen((state) => !state)}>
+            <button className="btn py-0" style={{ fontSize: "2rem" }}>
+              {sidebarOpen ? "<=" : "=>"}
+            </button>
+          </div>
+          <SidebarComponent sidebarOpen={sidebarOpen} />
         </div>
-        <SidebarComponent sidebarOpen />
         <main>
           <Outlet />
         </main>
