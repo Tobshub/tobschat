@@ -34,7 +34,13 @@ export function SignUpPage() {
       {formError ? <small className="alert alert-danger py-1">{formError}</small> : null}
       <div className="form-group mb-3">
         <label>Username:</label>
-        <input className="form-control" required onChange={(e) => handleChange("username", e.target.value)} />
+        <input
+          className="form-control"
+          minLength={5}
+          maxLength={20}
+          required
+          onChange={(e) => handleChange("username", e.target.value)}
+        />
       </div>
       <div className="form-group mb-3">
         <label>Email:</label>
