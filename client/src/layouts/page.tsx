@@ -1,11 +1,10 @@
 import "@assets/page.scss";
 import store from "@data/zustand";
 import { socket } from "@utils/socket";
-import { removeToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import { SidebarComponent } from "components/sidebar";
+import { SidebarComponent } from "./components/sidebar";
 import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 export default function Page() {
   // load username to context
