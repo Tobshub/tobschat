@@ -6,7 +6,7 @@ export async function getUserRooms(id: string) {
   try {
     const user = await usePrisma.user.findUnique({
       where: { id: id },
-      select: { rooms: { select: { blob: true, name: true } } },
+      select: { rooms: { select: { blob: true, name: true, members: { select: { username: true }, take: 5 } } } },
     });
 
     if (!user) {
