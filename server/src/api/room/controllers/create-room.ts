@@ -22,14 +22,13 @@ export async function createRoom(userId: string, roomProps: { name: string; othe
         name: roomProps.name,
         members: { connect: [{ id: otherMember.id }, { id: userId }] },
       },
-      select: { id: true },
+      select: { blob: true, name: true },
     });
 
-    // emit socket event to tell client to refetch
-    io.to([otherMember.id, userId]).emit("room:new");
+    // emit socket event with new room data
+    io.to([otherMember.id, userId]).emit("room:new", room);
 
-    // don't pass memberIds back to the user
-    return Ok(room.id);
+    return Ok(room);
   } catch (err) {
     LOG.error(err, "Error: failed to create room");
     return Err("an error occured", err);
