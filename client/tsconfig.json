@@ -21,6 +21,7 @@
       "@server/*": ["../../server/src/*"],
       "@utils/*": ["./utils/*"],
       "@pages/*": ["./pages/*"],
+      "@layouts/*": ["./layouts/*"],
       "@assets/*": ["./assets/*"],
       "@data/*": ["./data/*"]
     }
