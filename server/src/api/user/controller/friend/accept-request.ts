@@ -11,7 +11,7 @@ export async function acceptFriendRequest(userId: string, requestId: string) {
         data: { receivedFriendRequests: { update: { where: { id: requestId }, data: { status: "ACCEPTED" } } } },
         select: { receivedFriendRequests: { where: { id: requestId }, select: { senderId: true } } },
       })
-      // error thrown when sentFriendRequests is not found
+      // error thrown when receivedFriendRequests is not found
       .catch((_) => null);
 
     if (!friendRequest) {
