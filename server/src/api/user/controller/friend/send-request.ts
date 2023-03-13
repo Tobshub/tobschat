@@ -12,6 +12,9 @@ export async function sendFriendRequest(userId: string, receiver: { publicId: st
     if (!receivingUser) {
       return Err("User does not exist");
     }
+    if (receivingUser.id === userId) {
+      return Err("Cannot send friend request to yourself.");
+    }
 
     const friendRequest = await usePrisma.friendRequest.create({
       data: {
@@ -21,7 +24,7 @@ export async function sendFriendRequest(userId: string, receiver: { publicId: st
       select: { id: true, status: true, sender: { select: { publicId: true, username: true } } },
     });
 
-    io.to(receivingUser.id).emit("noti:friend_req", friendRequest);
+    io.to(receivingUser.id).emit("friend_request:new", friendRequest);
 
     return Ok("");
   } catch (error) {
