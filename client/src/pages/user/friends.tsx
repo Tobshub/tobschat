@@ -11,6 +11,21 @@ export default function FriendsPage() {
   const pidInputRef = useRef<HTMLInputElement>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const friendRequests = trpc.user.friendRequest.get.useQuery();
+
+  const friendsListQuery = trpc.user.getUserPrivate.useQuery(undefined, {
+    enabled: false,
+    refetchOnMount: false,
+    staleTime: Infinity,
+  });
+  const refetchFriends = async () => {
+    friendsListQuery.refetch().then(({ data }) => {
+      if (data && data.ok) {
+        console.log(data.value.friends);
+        setFriends(data.value.friends);
+      }
+    });
+  };
+
   // TODO: create room with a friend
   return (
     <div>
@@ -59,7 +74,10 @@ export default function FriendsPage() {
         <div>
           <h3>Sent</h3>
           {friendRequests.data ? (
-            <SentFriendRequests sentFriendRequests={friendRequests.data.value.sentFriendRequests} />
+            <SentFriendRequests
+              sentFriendRequests={friendRequests.data.value.sentFriendRequests}
+              refetchFriends={refetchFriends}
+            />
           ) : (
             "Loading..."
           )}
@@ -67,7 +85,10 @@ export default function FriendsPage() {
         <div>
           <h3>Received</h3>
           {friendRequests.data ? (
-            <ReceivedFriendRequests receivedFriendRequests={friendRequests.data.value.receivedFriendRequests} />
+            <ReceivedFriendRequests
+              receivedFriendRequests={friendRequests.data.value.receivedFriendRequests}
+              refetchFriends={refetchFriends}
+            />
           ) : (
             "Loading..."
           )}
@@ -83,8 +104,38 @@ function SentFriendRequests(props: {
     status: "WAITING" | "DECLINED" | "ACCEPTED";
     id: string;
   }[];
+  refetchFriends: () => Promise<void>;
 }) {
   const [friendRequests, setFriendRequests] = useState(props.sentFriendRequests);
+
+  useEffect(() => {
+    // update request that has been accepted
+    socket.on("friend_request:accepted", (requestId) => {
+      const index = friendRequests.findIndex((request) => request.id === requestId);
+      if (index >= 0) {
+        setFriendRequests((state) => {
+          state[index].status = "ACCEPTED";
+          return [...state];
+        });
+        props.refetchFriends();
+      }
+    });
+    // update request that has been rejected
+    socket.on("friend_request:declined", (requestId) => {
+      const index = friendRequests.findIndex((request) => request.id === requestId);
+      if (index >= 0) {
+        setFriendRequests((state) => {
+          state[index].status = "DECLINED";
+          return [...state];
+        });
+      }
+    });
+
+    return () => {
+      socket.off("friend_request:accepted");
+      socket.off("friend_request:declined");
+    };
+  }, []);
 
   useEffect(() => {
     socket.on("friend_request:sent", (friendRequest) => {
@@ -141,6 +192,7 @@ function ReceivedFriendRequests(props: {
     status: "WAITING" | "DECLINED" | "ACCEPTED";
     id: string;
   }[];
+  refetchFriends: () => Promise<void>;
 }) {
   const [friendRequests, setFriendRequests] = useState(props.receivedFriendRequests);
 
@@ -153,6 +205,38 @@ function ReceivedFriendRequests(props: {
       socket.off("friend_request:new");
     };
   }, []);
+
+  const acceptFriendRequestMut = trpc.user.friendRequest.acceptFriendRequest.useMutation();
+  const acceptFriendRequest = (requestId: string) => {
+    const index = friendRequests.findIndex((request) => request.id === requestId);
+    if (index >= 0) {
+      setFriendRequests((state) => {
+        state[index].status = "ACCEPTED";
+        return [...state];
+      });
+      acceptFriendRequestMut.mutateAsync({ requestId }).then((data) => {
+        if (data.ok) {
+          props.refetchFriends();
+        }
+      });
+    }
+  };
+
+  const declineFriendRequestMut = trpc.user.friendRequest.declineFriendRequest.useMutation();
+  const declineFriendRequest = (requestId: string) => {
+    const index = friendRequests.findIndex((request) => request.id === requestId);
+    if (index >= 0) {
+      setFriendRequests((state) => {
+        state[index].status = "ACCEPTED";
+        return [...state];
+      });
+      declineFriendRequestMut.mutateAsync({ requestId }).then((data) => {
+        if (data.ok) {
+          props.refetchFriends();
+        }
+      });
+    }
+  };
 
   if (!friendRequests.length) {
     return <>You haven't received any Friend Requests.</>;
@@ -183,8 +267,12 @@ function ReceivedFriendRequests(props: {
           <span className="d-flex gap-2">
             {friendRequest.status === "WAITING" ? (
               <>
-                <button className="btn btn-outline-success">ACCEPT</button>
-                <button className="btn btn-outline-danger">DECLINE</button>
+                <button className="btn btn-outline-success" onClick={() => acceptFriendRequest(friendRequest.id)}>
+                  ACCEPT
+                </button>
+                <button className="btn btn-outline-danger" onClick={() => declineFriendRequest(friendRequest.id)}>
+                  DECLINE
+                </button>
               </>
             ) : (
               <button className="btn btn-outline-warning">HIDE</button>
