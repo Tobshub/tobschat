@@ -117,7 +117,10 @@ function friendRequestRouter() {
           case "User does not exist": {
             throw new tError({ code: "NOT_FOUND", message: res.message });
           }
-          case "Cannot send friend request to yourself.": {
+          case "Cannot send friend request to yourself.":
+          case "User has already sent you a friend request.":
+          case "You are already friends with this user.":
+          case "You have already sent a friend request to this user.": {
             throw new tError({ code: "FORBIDDEN", message: res.message });
           }
           default: {
