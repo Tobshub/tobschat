@@ -20,7 +20,6 @@ export default function FriendsPage() {
   const refetchFriends = async () => {
     friendsListQuery.refetch().then(({ data }) => {
       if (data && data.ok) {
-        console.log(data.value.friends);
         setFriends(data.value.friends);
       }
     });
