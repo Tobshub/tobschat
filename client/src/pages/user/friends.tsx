@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function FriendsPage() {
   const [friends, setFriends] = store.use("friends");
+  const publicId = store.get("publicId");
   const pidInputRef = useRef<HTMLInputElement>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const friendRequests = trpc.user.friendRequest.get.useQuery();
@@ -20,6 +21,7 @@ export default function FriendsPage() {
         />
       ) : null}
       <h1>Friends</h1>
+      <small>Public ID: {publicId}</small>
       <form
         className="input-group mb-3"
         onSubmit={(e) => {
@@ -84,6 +86,16 @@ function SentFriendRequests(props: {
 }) {
   const [friendRequests, setFriendRequests] = useState(props.sentFriendRequests);
 
+  useEffect(() => {
+    socket.on("friend_request:sent", (friendRequest) => {
+      setFriendRequests((state) => [...state, friendRequest]);
+    });
+
+    return () => {
+      socket.off("friend_request:sent");
+    };
+  }, []);
+
   if (!friendRequests.length) {
     return <>You haven't sent any Friend Requests</>;
   }
@@ -111,7 +123,7 @@ function SentFriendRequests(props: {
           <span className="d-flex gap-2">
             {friendRequest.status === "WAITING" ? (
               <>
-                <button className="btn btn-outline-success">CANCEL</button>
+                <button className="btn btn-outline-danger">CANCEL</button>
               </>
             ) : (
               <button className="btn btn-outline-warning">HIDE</button>

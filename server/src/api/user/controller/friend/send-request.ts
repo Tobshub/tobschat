@@ -21,10 +21,17 @@ export async function sendFriendRequest(userId: string, receiver: { publicId: st
         sender: { connect: { id: userId } },
         receiver: { connect: { id: receivingUser.id } },
       },
-      select: { id: true, status: true, sender: { select: { publicId: true, username: true } } },
+      select: {
+        id: true,
+        status: true,
+        sender: { select: { publicId: true, username: true } },
+        receiver: { select: { publicId: true, username: true } },
+      },
     });
 
+    // emit the new friendrequest in respective events
     io.to(receivingUser.id).emit("friend_request:new", friendRequest);
+    io.to(userId).emit("friend_request:sent", friendRequest);
 
     return Ok("");
   } catch (error) {
