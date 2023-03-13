@@ -18,6 +18,11 @@ export async function acceptFriendRequest(userId: string, requestId: string) {
       return Err("User hasn't sent you a friend request!");
     }
 
+    await usePrisma.user.update({
+      where: { id: userId },
+      data: { friendsWith: { connect: { id: friendRequest.receivedFriendRequests[0].senderId } } },
+    });
+
     // emit event with request id to let sender know request has been accepted
     io.to(friendRequest.receivedFriendRequests[0].senderId).emit("friend_request:accepted", requestId);
 
