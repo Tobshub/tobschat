@@ -1,12 +1,7 @@
 import z from "zod";
-import { newUser } from "./controller/user/new";
-import { login } from "./controller/user/login";
-import { getUserRooms } from "./controller/user/rooms";
-import { getUserPrivate } from "./controller/user/get-user";
-import { getFriendRequests } from "./controller/friend/get-requests";
-import { sendFriendRequest } from "./controller/friend/send-request";
 import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
-import { searchUser } from "./controller/user/search-users";
+import { getFriendRequests, sendFriendRequest } from "./controller/friend";
+import { newUser, login, getUserRooms, getUserPrivate, searchUser } from "./controller/user";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -130,8 +125,11 @@ function friendRequestRouter() {
           }
         }
       }),
-    // acceptFriendRequest:
+    acceptFriendRequest: authedProcedure
+      .input(z.object({ requestId: z.string() }))
+      .mutation(async ({ ctx, input }) => {}),
     // declineFriendRequest:
+    // cancelFriendRequest:
   });
 }
 
