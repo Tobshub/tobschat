@@ -5,6 +5,7 @@ import { trpc } from "@utils/trpc";
 import { SidebarComponent } from "./components/sidebar";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { getToken } from "@utils/token";
 
 export default function Page() {
   // load username to context
@@ -68,6 +69,7 @@ function socketStatus() {
     });
     socket.on("connect", () => {
       console.log("CONN!");
+      socket.emit("user:load", getToken());
       setIsDisconnected(false);
     });
 

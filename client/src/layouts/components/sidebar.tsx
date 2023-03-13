@@ -24,12 +24,12 @@ export function SidebarComponent(props: { sidebarOpen: boolean }) {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to={"/friends"} className="nav-link">
+            <NavLink to={"/user/friends"} className="nav-link">
               FRIENDS
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to={"/user"} className="nav-link">
+            <NavLink to={"/user/account"} className="nav-link">
               ACCOUNT
             </NavLink>
           </li>

@@ -3,6 +3,7 @@
   display: flex;
   gap: 0.5rem;
   padding: 1rem 0 0;
+  overflow: hidden;
 
   header {
     max-width: 300px;
@@ -13,6 +14,24 @@
     width: min(850px, 90%);
     overflow: hidden;
     padding-left: 1.5rem;
+
+    .overlay {
+      position: absolute;
+      z-index: 10;
+      background-color: hsla(0, 0, 0, 0.4);
+      width: 100dvw;
+      height: 100%;
+      left: 0;
+      top: 0;
+      display: grid;
+      place-items: center;
+
+      .overlay-container {
+        width: fit-content;
+        background-color: white;
+        padding: 2rem;
+      }
+    }
   }
 }
 

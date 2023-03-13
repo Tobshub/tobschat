@@ -1,0 +1,28 @@
+ul:has(.friend-request) {
+  list-style: none;
+  padding: 0;
+}
+.friend-request {
+  border: 1px outset;
+  border-radius: 5px;
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    color: black;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+  }
+  &.request-accepted {
+    background-color: hsla(128, 87%, 54%, 0.404);
+  }
+  &.request-declined {
+    background-color: hsla(2, 87%, 54%, 0.404);
+  }
+}
+

@@ -9,6 +9,7 @@ import { CreateRoomPage } from "@pages/rooms/create-room";
 import { RoomPage, roomPageLoader } from "@pages/rooms/room";
 import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
+import FriendsPage from "@pages/user/friends";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,13 @@ const router = createBrowserRouter([
           { path: "list", element: <RoomListPage /> },
           { path: "create", element: <CreateRoomPage /> },
           { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
+        ],
+      },
+      {
+        path: "/user",
+        children: [
+          { path: "friends", element: <FriendsPage /> },
+          { path: "account", element: <>Your account</> },
         ],
       },
     ],
