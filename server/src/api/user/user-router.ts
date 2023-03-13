@@ -1,6 +1,6 @@
 import z from "zod";
 import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
-import { getFriendRequests, sendFriendRequest } from "./controller/friend";
+import { acceptFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
 import { newUser, login, getUserRooms, getUserPrivate, searchUser } from "./controller/user";
 
 export const userRouter = tRouter({
@@ -125,9 +125,22 @@ function friendRequestRouter() {
           }
         }
       }),
-    acceptFriendRequest: authedProcedure
-      .input(z.object({ requestId: z.string() }))
-      .mutation(async ({ ctx, input }) => {}),
+    acceptFriendRequest: authedProcedure.input(z.object({ requestId: z.string() })).mutation(async ({ ctx, input }) => {
+      const res = await acceptFriendRequest(ctx.id, input.requestId);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "User hasn't sent you a friend request!": {
+          return res;
+        }
+        default: {
+          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+        }
+      }
+    }),
     // declineFriendRequest:
     // cancelFriendRequest:
   });
