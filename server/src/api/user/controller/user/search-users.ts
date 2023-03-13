@@ -2,17 +2,15 @@ import LOG from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
-export async function searchUser(query: string, cursor?: string) {
+export async function searchUser(publicId: string) {
   try {
-    const foundUsers = await usePrisma.user.findMany({
-      orderBy: { username: "asc" },
-      where: { username: { contains: query } },
-      select: { publicId: true, username: true },
-      take: 20,
-      cursor: cursor ? { publicId: cursor } : undefined,
-    });
+    const user = await usePrisma.user.findUnique({ where: { publicId }, select: { username: true, publicId: true } });
 
-    return Ok(foundUsers);
+    if (!user) {
+      return Err("User not found");
+    }
+
+    return Ok(user);
   } catch (error) {
     LOG.error(error, "Error: failed to search for users");
     return Err("An error occured");
