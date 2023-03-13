@@ -16,5 +16,7 @@ export interface Err<M, C> {
 /** Negative Result type
  * 
  * Implies operation failure
+ * 
+ * @param message - a message that will be handle by the parent caller of the function
  */
 export const Err = <const M, const C>(message: M, cause?: C): Err<M, C> => ({ok: false, message, cause}) as const;
