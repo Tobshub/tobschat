@@ -8,8 +8,8 @@ export async function acceptFriendRequest(userId: string, requestId: string) {
     const friendRequest = await usePrisma.user
       .update({
         where: { id: userId },
-        data: { sentFriendRequests: { update: { where: { id: requestId }, data: { status: "ACCEPTED" } } } },
-        select: { sentFriendRequests: { where: { id: requestId }, select: { senderId: true } } },
+        data: { receivedFriendRequests: { update: { where: { id: requestId }, data: { status: "ACCEPTED" } } } },
+        select: { receivedFriendRequests: { where: { id: requestId }, select: { senderId: true } } },
       })
       // error thrown when sentFriendRequests is not found
       .catch((_) => null);
@@ -19,7 +19,7 @@ export async function acceptFriendRequest(userId: string, requestId: string) {
     }
 
     // emit event with request id to let sender know request has been accepted
-    io.to(friendRequest.sentFriendRequests[0].senderId).emit("friend_request:accepted", requestId);
+    io.to(friendRequest.receivedFriendRequests[0].senderId).emit("friend_request:accepted", requestId);
 
     return Ok({});
   } catch (err) {
