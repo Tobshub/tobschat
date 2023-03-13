@@ -72,17 +72,22 @@ export const userRouter = tRouter({
       }
     }
   }),
-  searchUser: tProcedure
-    .input(z.object({ query: z.string(), cursor: z.string().optional() }))
-    .query(async ({ input }) => {
-      const res = await searchUser(input.query, input.cursor);
+  searchUser: tProcedure.input(z.object({ publicId: z.string() })).query(async ({ input }) => {
+    const res = await searchUser(input.publicId);
 
-      if (res.ok) {
+    if (res.ok) {
+      return res;
+    }
+
+    switch (res.message) {
+      case "User not found": {
         return res;
       }
-
-      throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
-    }),
+      default: {
+        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+      }
+    }
+  }),
   friendRequest: friendRequestRouter(),
 });
 
@@ -116,6 +121,9 @@ function friendRequestRouter() {
         switch (res.message) {
           case "User does not exist": {
             throw new tError({ code: "NOT_FOUND", message: res.message });
+          }
+          case "Cannot send friend request to yourself.": {
+            throw new tError({ code: "FORBIDDEN", message: res.message });
           }
           default: {
             throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
