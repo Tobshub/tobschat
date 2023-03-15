@@ -7,7 +7,8 @@ import { setToken } from "@utils/token";
 export function SignUpPage() {
   const [userProps, setUserProps] = useState({ username: "", email: "", password: "" });
 
-  const handleChange = (name: string, content: string) => setUserProps((state) => ({ ...state, [name]: content }));
+  const handleChange = (name: keyof typeof userProps, content: string) =>
+    setUserProps((state) => ({ ...state, [name]: content }));
 
   const [formError, setFormError] = useState("");
 
