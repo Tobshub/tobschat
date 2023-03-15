@@ -6,7 +6,7 @@ import { redirect } from "react-router-dom";
 export async function indexPageLoader() {
   const token = getToken();
   if (!token) {
-    return redirect("/auth/sign-up");
+    return redirect("/auth/login");
   }
   return null;
 }
