@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import AuthForm from "./components/auth-form";
 import { Link, useNavigate } from "react-router-dom";
 import { trpc } from "@utils/trpc";
@@ -27,12 +27,21 @@ export function LoginPage() {
     },
   });
 
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  // focus email input on first render
+  useLayoutEffect(() => {
+    if (emailInputRef.current) {
+      emailInputRef.current.focus();
+    }
+  }, []);
+
   return (
     <AuthForm next={() => loginMut.mutate(userProps)} title="Log In">
       {formError ? <small className="alert alert-danger py-1">{formError}</small> : null}
       <div className="form-group mb-3">
         <label>Email:</label>
         <input
+          ref={emailInputRef}
           className="form-control"
           type="email"
           placeholder="user@example.com"
