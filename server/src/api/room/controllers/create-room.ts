@@ -23,7 +23,7 @@ export async function createPrivateRoom(userId: string, roomProps: { otherMember
       select: { blob: true },
     });
 
-    if (existingPrivateRoom) {
+    if (existingPrivateRoom.length) {
       return Err("Room already exists with that user", existingPrivateRoom);
     }
 
