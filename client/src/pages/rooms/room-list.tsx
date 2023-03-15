@@ -3,10 +3,12 @@ import { trpc } from "@utils/trpc";
 import { useLogout } from "@layouts/components/sidebar";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import store from "@data/zustand";
 
 export function RoomListPage() {
   const navigate = useNavigate();
   const userLogout = useLogout();
+  const publicId = store.get("publicId");
   const roomsQuery = trpc.user.userRooms.useQuery();
   const [rooms, setRooms] = useState(roomsQuery.data?.value ?? []);
 
@@ -45,7 +47,12 @@ export function RoomListPage() {
               <li key={room.blob}>
                 <Link to={`/room/${room.blob}`} className="btn btn-outline-secondary mb-3">
                   <div style={{ textAlign: "left" }}>
-                    <strong style={{ display: "block", textTransform: "capitalize" }}>{room.name}</strong>
+                    <strong style={{ display: "block", textTransform: "capitalize" }}>
+                      {room.type === "GROUP"
+                        ? room.name
+                        : // room name in private rooms will be other user's username
+                          room.members.find((member) => member.publicId !== publicId)?.username}
+                    </strong>
                     <small>{room.members.map((member) => member.username).join(" | ")}</small>
                   </div>
                 </Link>
