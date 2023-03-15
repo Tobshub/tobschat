@@ -1,28 +1,31 @@
+import store from "@data/zustand";
 import { trpc } from "@utils/trpc";
-import UserContext from "context/user";
-import { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export function CreateRoomPage() {
+  // TODO: support for creating groups
   const roomNameRef = useRef<HTMLInputElement>(null);
-  const [otherMember, setOtherMember] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const createRoomMut = trpc.room.createRoom.useMutation({
+  const [selectedFriend, setSelectedFriend] = useState<{ publicId: string | null }>({ publicId: null });
+
+  const createRoomMut = trpc.room.createPrivateRoom.useMutation({
     onSuccess(res) {
       if (res.ok) {
-        navigate(`/room/${res.value}`);
+        navigate(`/room/${res.value.blob}`);
       } else {
         setErrorMessage(res.message);
       }
     },
     onError(e) {
+      setErrorMessage("An Error occured. Please Try Again Later");
       console.log(e);
     },
   });
 
-  const username = useContext(UserContext).username;
+  const friends = store.get("friends");
 
   return (
     <div>
@@ -31,29 +34,70 @@ export function CreateRoomPage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createRoomMut.mutate({ name: roomNameRef.current?.value as string, otherMember });
+          if (selectedFriend.publicId) {
+            createRoomMut.mutate({ otherMember: selectedFriend.publicId });
+          }
         }}
         style={{
           width: "min(80%, 500px)",
         }}
       >
         <div className="form-group mb-3">
-          <label>Room Name: </label>
-          <input className="form-control" required ref={roomNameRef} />
+          <label className="mx-2">Room Type: </label>
+          <select>
+            <option value={"private"}>PRIVATE</option>
+            <option disabled>GROUP</option>
+          </select>
         </div>
-        <div className="form-group mb-3">
-          <label>Members: </label>
-          <input readOnly disabled className="form-control mb-1" value={`You (${username})`} />
-          <input
-            className="form-control"
-            required
-            placeholder="othermember@example.com"
-            onChange={(e) => setOtherMember(e.target.value)}
-          />
+
+        <div>
+          <button
+            type="submit"
+            className="btn btn-outline-success"
+            disabled={createRoomMut.isLoading || !selectedFriend.publicId}
+          >
+            CREATE NEW ROOM
+          </button>
+          <p>Choose a friend to the create the room with.</p>
+          <ul className="navbar-nav mb-3">
+            {friends.length ? (
+              friends.map((friend) => (
+                <li
+                  key={friend.publicId}
+                  className={`nav-item ${friend.publicId === selectedFriend.publicId ? "selected-friend" : ""}`}
+                >
+                  <Link to={`/user/@/${friend.publicId}`}>{friend.username}</Link>
+                  {friend.publicId !== selectedFriend.publicId ? (
+                    <button
+                      className="btn py-0"
+                      title="Select User"
+                      type="button"
+                      onClick={() => setSelectedFriend({ publicId: friend.publicId })}
+                    >
+                      +
+                    </button>
+                  ) : (
+                    <button
+                      className="btn py-0"
+                      title="Deselect User"
+                      type="button"
+                      onClick={() => setSelectedFriend({ publicId: null })}
+                    >
+                      -
+                    </button>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p>
+                You don't have any friends yet.{" "}
+                <Link className="btn btn-link p-0" to={"/user/friends"}>
+                  Add Friends
+                </Link>
+              </p>
+            )}
+          </ul>
         </div>
-        <button type="submit" className="btn btn-outline-success" disabled={createRoomMut.isLoading || !otherMember}>
-          CREATE NEW ROOM
-        </button>
       </form>
     </div>
   );
