@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import appHandler from "./app";
-import LOG from "./config/log";
+import Log from "./config/log";
 import { PrismaConn } from "./config/prisma";
 import socketHandler from "./socket";
 
@@ -28,6 +28,6 @@ export const io = new Server(httpServer, {
 socketHandler(io);
 
 httpServer.listen(env.port, () => {
-  LOG.info(`live ::${env.port}`);
+  Log.info(`live ::${env.port}`);
 });
 

@@ -1,4 +1,4 @@
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -22,7 +22,7 @@ export async function getFriendRequests(id: string) {
 
     return Ok(user);
   } catch (err) {
-    LOG.error(err, "Error: could not get friend requests");
+    Log.error(err, "Error: could not get friend requests");
     return Err("an error occured", err);
   }
 }

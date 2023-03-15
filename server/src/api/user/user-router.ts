@@ -2,6 +2,7 @@ import z from "zod";
 import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
 import { acceptFriendRequest, declineFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
 import { newUser, login, getUserRooms, getUserPrivate, searchUser, getUserPublic } from "./controller/user";
+import Log from "../../config/log";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -9,10 +10,12 @@ export const userRouter = tRouter({
       z.object({ email: z.string().email(), password: z.string().min(8).max(64), username: z.string().min(5).max(20) })
     )
     .mutation(async ({ input }) => {
+      Log.info("Sign Up Attempt");
       // replace spaces with underscores
       const username = input.username.split(" ").join("_");
       const res = await newUser({ ...input, username });
       if (res.ok) {
+        Log.info("Sign up success");
         return res;
       }
       switch (res.message) {
@@ -25,8 +28,10 @@ export const userRouter = tRouter({
       }
     }),
   login: tProcedure.input(z.object({ email: z.string().email(), password: z.string() })).mutation(async ({ input }) => {
+    Log.info("Login Attempt");
     const res = await login(input);
     if (res.ok) {
+      Log.info("Login Success");
       return res;
     }
     switch (res.message) {
@@ -39,9 +44,11 @@ export const userRouter = tRouter({
     }
   }),
   userRooms: authedProcedure.query(async ({ ctx }) => {
+    Log.info(["Loading Rooms", ctx.id]);
     const res = await getUserRooms(ctx.id);
 
     if (res.ok) {
+      Log.info(["Success Loading Rooms", ctx.id]);
       return res;
     }
     // for all error cases, force the user to login again
@@ -55,8 +62,10 @@ export const userRouter = tRouter({
     }
   }),
   getUserPrivate: authedProcedure.query(async ({ ctx }) => {
+    Log.info(["Getting User's Private Data", ctx.id]);
     const res = await getUserPrivate(ctx.id);
     if (res.ok) {
+      Log.info(["Success Getting User's Private Data", ctx.id]);
       return res;
     }
 
@@ -125,9 +134,11 @@ function friendRequestRouter() {
     send: authedProcedure
       .input(z.object({ receiver: z.object({ publicId: z.string() }) }))
       .mutation(async ({ ctx, input }) => {
+        Log.info(["Sending Friend Request"]);
         const res = await sendFriendRequest(ctx.id, input.receiver);
 
         if (res.ok) {
+          Log.info(["Sent friend Request"]);
           return res;
         }
 
@@ -139,6 +150,7 @@ function friendRequestRouter() {
           case "User has already sent you a friend request.":
           case "You are already friends with this user.":
           case "You have already sent a friend request to this user.": {
+            Log.error(["Invalid Friend Request", res.message]);
             throw new tError({ code: "FORBIDDEN", message: res.message });
           }
           default: {
@@ -180,7 +192,7 @@ function friendRequestRouter() {
           }
         }
       }),
-    // cancelFriendRequest:
+    // TODO: cancelFriendRequest
   });
 }
 

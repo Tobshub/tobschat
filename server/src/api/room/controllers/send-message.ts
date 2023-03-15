@@ -1,4 +1,4 @@
-import LOG from "../../../config/log";
+import Log from "../../../config/log";
 import { usePrisma } from "../../../config/prisma";
 import { Ok, Err } from "../../../helpers/result";
 
@@ -20,7 +20,7 @@ export async function sendMessage(messageProps: {
 
     return Ok({});
   } catch (err) {
-    LOG.error(err, "Error: failed to send Message");
+    Log.error(err, "Error: failed to send Message");
     return Err("an error occured");
   }
 }

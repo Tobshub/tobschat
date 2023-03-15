@@ -1,4 +1,4 @@
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -19,12 +19,13 @@ export async function getUserRooms(id: string) {
     });
 
     if (!user) {
+      Log.error("User not found");
       return Err("user not found");
     }
 
     return Ok(user.rooms);
   } catch (err) {
-    LOG.error(err, "Error: failed to get user's rooms");
+    Log.error(err, "Error: failed to get user's rooms");
     return Err("an error occured");
   }
 }

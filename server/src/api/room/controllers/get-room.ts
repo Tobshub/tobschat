@@ -1,4 +1,4 @@
-import LOG from "../../../config/log";
+import Log from "../../../config/log";
 import { usePrisma } from "../../../config/prisma";
 import { Err, Ok } from "../../../helpers/result";
 
@@ -18,6 +18,7 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
       return Err("room does not exist");
     }
     if (!room.memberIds.includes(userId)) {
+      Log.warn(["User tried to access a room that isn't theirs", userId]);
       return Err("user is not a member of that room");
     }
 
@@ -28,7 +29,7 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
       members: room.members,
     });
   } catch (err) {
-    LOG.error(err, "Error: failed to fetch room");
+    Log.error(err, "Error: failed to fetch room");
     return Err("an error occured");
   }
 }

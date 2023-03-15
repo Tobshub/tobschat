@@ -1,5 +1,5 @@
 import { io } from "../../../..";
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -28,7 +28,7 @@ export async function acceptFriendRequest(userId: string, requestId: string) {
 
     return Ok({});
   } catch (err) {
-    LOG.error(err, "Error: Failed to accept request");
+    Log.error(err, "Error: Failed to accept request");
     return Err("An error occured");
   }
 }

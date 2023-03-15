@@ -1,19 +1,20 @@
 import jwt from "jsonwebtoken";
 import { env } from "..";
-import LOG from "./log";
+import Log from "./log";
 import { Ok, Err } from "../helpers/result";
 
 const appToken = {
   /** Generates a jwt token */
   gen(id: string) {
     try {
-      if (!env.jwt_secret) LOG.error("jwt secret is missing");
+      if (!env.jwt_secret) Log.error("jwt secret is missing");
+      Log.info("Generating user token");
       // iat in seconds
       const payload = { id, iat: Date.now() / 1000 };
       const token = jwt.sign(payload, env.jwt_secret as string, { expiresIn: "30d" });
       return Ok(token);
     } catch (err) {
-      LOG.error(err, "failed to generate new token");
+      Log.error(err, "failed to generate new token");
       return Err("failed to generate token", err);
     }
   },
@@ -23,7 +24,7 @@ const appToken = {
    */
   validate(token: string) {
     try {
-      if (!env.jwt_secret) LOG.warn("jwt secret is missing");
+      if (!env.jwt_secret) Log.warn("jwt secret is missing");
       const decoded = jwt.verify(token, env.jwt_secret as string) as { id: string };
       return Ok(decoded);
     } catch (err) {

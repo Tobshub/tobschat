@@ -1,4 +1,4 @@
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -20,6 +20,7 @@ export async function getUserPrivate(id: string) {
     });
 
     if (!user) {
+      Log.error(["User Not Found", id]);
       return Err("user not found");
     }
 
@@ -30,7 +31,7 @@ export async function getUserPrivate(id: string) {
       friends: user.friendsWith.concat(user.friendsOf),
     });
   } catch (err) {
-    LOG.error(err, "Error: failed to get private profile");
+    Log.error(err, "Error: failed to get private profile");
     return Err("an error occured", err);
   }
 }
@@ -51,7 +52,7 @@ export async function getUserPublic(publicId: string) {
 
     return Ok(user);
   } catch (error) {
-    LOG.error(error, "Error: failed to get public user profile");
+    Log.error(error, "Error: failed to get public user profile");
     return Err("An error occured", error);
   }
 }

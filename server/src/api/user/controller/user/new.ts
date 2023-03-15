@@ -1,5 +1,5 @@
 import b from "bcrypt";
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import appToken from "../../../../config/token";
 import { Err } from "../../../../helpers/result";
@@ -8,6 +8,7 @@ export async function newUser(userProps: { username: string; email: string; pass
   try {
     const check = await checkUser(userProps.email, userProps.username);
     if (!check) {
+      Log.error("User tried to sign up with an existing email or username");
       return Err("user already exists");
     }
 
@@ -22,7 +23,7 @@ export async function newUser(userProps: { username: string; email: string; pass
 
     return genToken;
   } catch (error) {
-    LOG.error(error, "failed to create new user");
+    Log.error(error, "failed to create new user");
     return Err("an error occured", error);
   }
 }

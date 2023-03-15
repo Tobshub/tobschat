@@ -1,5 +1,5 @@
 import { io } from "../../../..";
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -23,7 +23,7 @@ export async function declineFriendRequest(userId: string, requestId: string) {
 
     return Ok({});
   } catch (error) {
-    LOG.error(error, "Error: Failed to decline friend request");
+    Log.error(error, "Error: Failed to decline friend request");
     return Err("An error occured.");
   }
 }

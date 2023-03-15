@@ -1,4 +1,4 @@
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -12,7 +12,7 @@ export async function searchUser(username: string) {
 
     return Ok(user);
   } catch (error) {
-    LOG.error(error, "Error: failed to search for users");
+    Log.error(error, "Error: failed to search for users");
     return Err("An error occured");
   }
 }

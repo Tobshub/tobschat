@@ -1,5 +1,5 @@
 import { io } from "../../../..";
-import LOG from "../../../../config/log";
+import Log from "../../../../config/log";
 import { usePrisma } from "../../../../config/prisma";
 import { Err, Ok } from "../../../../helpers/result";
 
@@ -53,7 +53,7 @@ export async function sendFriendRequest(userId: string, receiver: { publicId: st
 
     return Ok("");
   } catch (error) {
-    LOG.error(error, "Error: failed to send friend request");
+    Log.error(error, "Error: failed to send friend request");
     return Err("An error occured");
   }
 }

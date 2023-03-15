@@ -1,5 +1,5 @@
 import { io } from "../../..";
-import LOG from "../../../config/log";
+import Log from "../../../config/log";
 import { usePrisma } from "../../../config/prisma";
 import { Err, Ok } from "../../../helpers/result";
 
@@ -41,7 +41,7 @@ export async function createPrivateRoom(userId: string, roomProps: { otherMember
 
     return Ok(room);
   } catch (err) {
-    LOG.error(err, "Error: failed to create room");
+    Log.error(err, "Error: failed to create room");
     return Err("an error occured", err);
   }
 }
