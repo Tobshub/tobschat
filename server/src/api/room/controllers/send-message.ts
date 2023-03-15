@@ -6,11 +6,11 @@ export async function sendMessage(messageProps: {
   senderPublicId: string;
   content: string;
   key: string;
-  roomId: string;
+  roomBlob: string;
 }) {
   try {
     await usePrisma.room.update({
-      where: { id: messageProps.roomId },
+      where: { blob: messageProps.roomBlob },
       data: { messages: { push: { ...messageProps } } },
     });
 

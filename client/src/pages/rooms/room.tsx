@@ -3,13 +3,12 @@ import store from "@data/zustand";
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { trpc } from "@utils/trpc";
-import UserContext from "context/user";
-import { RefObject, useContext, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 
 export async function roomPageLoader({ params }: LoaderFunctionArgs) {
-  const roomId = params.id;
-  return roomId;
+  const { blob } = params;
+  return blob;
 }
 
 function genId() {
@@ -21,8 +20,8 @@ function scrollBottom(ref: RefObject<HTMLDivElement>) {
 }
 
 export function RoomPage() {
-  const roomId = useLoaderData() as string;
-  const room = trpc.room.getRoom.useQuery(roomId);
+  const roomBlob = useLoaderData() as string;
+  const room = trpc.room.getRoom.useQuery(roomBlob);
   const publicId = store.get("publicId");
   const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
@@ -43,8 +42,8 @@ export function RoomPage() {
       key: genId(),
       content: newMessage,
       createdAt: new Date().toISOString(),
-      roomId,
       senderPublicId: publicId,
+      roomBlob,
     };
     socket.emit("room:message", message, getToken());
     setMessages((state) => [...state, message]);
@@ -53,14 +52,14 @@ export function RoomPage() {
   };
 
   useEffect(() => {
-    socket.emit("room:join", roomId);
+    socket.emit("room:join", roomBlob);
     socket.on("room:message", (message) => {
       setMessages((state) => [...state, message]);
     });
 
     return () => {
       socket.off("room:message");
-      socket.emit("room:leave", roomId);
+      socket.emit("room:leave", roomBlob);
     };
   }, []);
 

@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         children: [
           { path: "list", element: <RoomListPage /> },
           { path: "create", element: <CreateRoomPage /> },
-          { path: ":id", loader: roomPageLoader, element: <RoomPage /> },
+          { path: ":blob", loader: roomPageLoader, element: <RoomPage /> },
         ],
       },
       {
