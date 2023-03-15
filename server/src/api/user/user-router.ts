@@ -1,7 +1,7 @@
 import z from "zod";
 import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
 import { acceptFriendRequest, declineFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
-import { newUser, login, getUserRooms, getUserPrivate, searchUser } from "./controller/user";
+import { newUser, login, getUserRooms, getUserPrivate, searchUser, getUserPublic } from "./controller/user";
 
 export const userRouter = tRouter({
   new: tProcedure
@@ -60,6 +60,22 @@ export const userRouter = tRouter({
 
     switch (res.message) {
       case "user not found": {
+        throw new tError({ code: "NOT_FOUND", message: res.message });
+      }
+      default: {
+        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+      }
+    }
+  }),
+  getUserPublic: tProcedure.input(z.object({ publicId: z.string() })).query(async ({ input }) => {
+    const res = await getUserPublic(input.publicId);
+
+    if (res.ok) {
+      return res;
+    }
+
+    switch (res.message) {
+      case "User not found": {
         throw new tError({ code: "NOT_FOUND", message: res.message });
       }
       default: {

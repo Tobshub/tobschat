@@ -19,19 +19,40 @@ export async function getUserPrivate(id: string) {
       },
     });
 
-    if (!user || user.id !== id) {
+    if (!user) {
       return Err("user not found");
     }
 
     return Ok({
       email: user.email,
-      username: user.email,
+      username: user.username,
       publicId: user.publicId,
       friends: user.friendsWith.concat(user.friendsOf),
     });
   } catch (err) {
-    LOG.error(err, "Error: failed to get username");
+    LOG.error(err, "Error: failed to get private profile");
     return Err("an error occured", err);
+  }
+}
+
+export async function getUserPublic(publicId: string) {
+  try {
+    const user = await usePrisma.user.findUnique({
+      where: { publicId },
+      select: {
+        username: true,
+        publicId: true,
+        bio: true,
+      },
+    });
+    if (!user) {
+      return Err("User not found");
+    }
+
+    return Ok(user);
+  } catch (error) {
+    LOG.error(error, "Error: failed to get public user profile");
+    return Err("An error occured", error);
   }
 }
 
