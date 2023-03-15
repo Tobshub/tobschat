@@ -9,7 +9,9 @@ export const userRouter = tRouter({
       z.object({ email: z.string().email(), password: z.string().min(8).max(64), username: z.string().min(5).max(20) })
     )
     .mutation(async ({ input }) => {
-      const res = await newUser(input);
+      // replace spaces with underscores
+      const username = input.username.split(" ").join("_");
+      const res = await newUser({ ...input, username });
       if (res.ok) {
         return res;
       }
