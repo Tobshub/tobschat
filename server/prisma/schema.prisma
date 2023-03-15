@@ -61,7 +61,7 @@ enum RoomType {
 
 type Message {
   key            String
-  senderPublicId String   @db.ObjectId
+  senderPublicId String   
   content        String
   createdAt      DateTime @default(now())
 }
