@@ -6,8 +6,8 @@ import { Err } from "../../../../helpers/result";
 
 export async function newUser(userProps: { username: string; email: string; password: string }) {
   try {
-    const check = await checkUser(userProps.email);
-    if (check) {
+    const check = await checkUser(userProps.email, userProps.username);
+    if (!check) {
       return Err("user already exists");
     }
 
@@ -27,8 +27,15 @@ export async function newUser(userProps: { username: string; email: string; pass
   }
 }
 
-async function checkUser(email: string) {
-  const user = await usePrisma.user.findUnique({ where: { email }, select: { id: true } });
-  return user ? true : false;
+async function checkUser(email: string, username: string) {
+  const checkEmail = await usePrisma.user.findUnique({ where: { email }, select: { id: true } });
+  const checkUsername = await usePrisma.user.findUnique({ where: { username }, select: { id: true } });
+
+  // check fails if a user exists with the email or username
+  if (checkEmail || checkUsername) {
+    return false;
+  }
+
+  return true;
 }
 
