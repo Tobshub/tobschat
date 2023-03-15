@@ -6,7 +6,7 @@ import { Err, Ok } from "../../../helpers/result";
 export async function createPrivateRoom(userId: string, roomProps: { otherMember: string }) {
   try {
     const otherMember = await usePrisma.user.findUnique({
-      where: { email: roomProps.otherMember },
+      where: { publicId: roomProps.otherMember },
       select: { id: true },
     });
 

@@ -6,7 +6,7 @@ import { tRouter, authedProcedure, tError } from "../../config/trpc";
 
 export const roomRouter = tRouter({
   createPrivateRoom: authedProcedure
-    .input(z.object({ otherMember: z.string().email() }))
+    .input(z.object({ otherMember: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       const res = await createPrivateRoom(ctx.id, input);
 
