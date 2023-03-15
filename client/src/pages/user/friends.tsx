@@ -300,7 +300,9 @@ function ConfirmFriendRequestComponent(props: { publicId: string; close: () => v
   });
 
   const sendFriendRequest = () => {
-    sendFriendRequestMut.mutate({ receiver: { publicId: props.publicId } });
+    if (data && data.ok) {
+      sendFriendRequestMut.mutate({ receiver: { publicId: data.value.publicId } });
+    }
   };
 
   if (isLoading) {
