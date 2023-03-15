@@ -18,7 +18,7 @@
     .overlay {
       position: absolute;
       z-index: 10;
-      background-color: hsla(0, 0, 0, 0.4);
+      background-color: hsla(0, 0%, 0%, 40%);
       width: 100dvw;
       height: 100%;
       left: 0;
@@ -34,7 +34,7 @@
     }
 
     .selected-friend {
-      background-color: hsla(113, 38%, 47%, 0.4);
+      background-color: hsla(113, 38%, 47%, 40%);
     }
   }
 }
