@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 
 export default function FriendsPage() {
   const [friends, setFriends] = store.use("friends");
-  const publicId = store.get("publicId");
-  const pidInputRef = useRef<HTMLInputElement>(null);
+  const username = store.get("username");
+  const usernameInputRef = useRef<HTMLInputElement>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const friendRequests = trpc.user.friendRequest.get.useQuery();
 
@@ -31,11 +31,11 @@ export default function FriendsPage() {
       {showConfirm ? (
         <ConfirmFriendRequestComponent
           close={() => setShowConfirm(false)}
-          publicId={pidInputRef.current?.value as string}
+          username={usernameInputRef.current?.value as string}
         />
       ) : null}
       <h1>Friends</h1>
-      <small>Public ID: {publicId}</small>
+      <small>You: {username}</small>
       <form
         className="input-group mb-3"
         onSubmit={(e) => {
@@ -43,8 +43,8 @@ export default function FriendsPage() {
           setShowConfirm(true);
         }}
       >
-        <label className="input-group-text">PUBLIC ID:</label>
-        <input className="form-control" type="search" style={{ maxWidth: "500px" }} ref={pidInputRef} />
+        <label className="input-group-text">Username:</label>
+        <input className="form-control" type="search" style={{ maxWidth: "500px" }} ref={usernameInputRef} />
         <button className="btn btn-outline-secondary" type="submit">
           SEARCH
         </button>
@@ -62,7 +62,7 @@ export default function FriendsPage() {
         ) : (
           <p>
             You don't have any friends yet.{" "}
-            <button className="btn btn-link p-0" onClick={() => pidInputRef.current?.focus()}>
+            <button className="btn btn-link p-0" onClick={() => usernameInputRef.current?.focus()}>
               Add Friends with their public Id
             </button>
           </p>
@@ -283,8 +283,10 @@ function ReceivedFriendRequests(props: {
   );
 }
 
-function ConfirmFriendRequestComponent(props: { publicId: string; close: () => void }) {
-  const { data, isLoading, error } = trpc.user.searchUser.useQuery({ publicId: props.publicId });
+function ConfirmFriendRequestComponent(props: { username: string; close: () => void }) {
+  const { data, isLoading, error } = trpc.user.searchUser.useQuery({
+    username: props.username.trim().split(" ").join("_"),
+  });
   const [requestError, setRequestError] = useState("");
   const sendFriendRequestMut = trpc.user.friendRequest.send.useMutation({
     onError(err) {

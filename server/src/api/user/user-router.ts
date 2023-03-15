@@ -83,8 +83,8 @@ export const userRouter = tRouter({
       }
     }
   }),
-  searchUser: tProcedure.input(z.object({ publicId: z.string() })).query(async ({ input }) => {
-    const res = await searchUser(input.publicId);
+  searchUser: tProcedure.input(z.object({ username: z.string() })).query(async ({ input }) => {
+    const res = await searchUser(input.username);
 
     if (res.ok) {
       return res;

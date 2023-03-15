@@ -16,7 +16,7 @@ model User {
   roomIds                String[]        @db.ObjectId
   publicId               String          @unique @default(cuid())
   // TODO: use the username with https://source.boringavatars.com/120/ to generate profile picture
-  username               String
+  username               String          @unique
   email                  String          @unique
   password               String
   friendsWith            User[]          @relation("Friends", fields: [friendsWithIds], references: [id])
@@ -61,7 +61,7 @@ enum RoomType {
 
 type Message {
   key            String
-  senderPublicId String   
+  senderPublicId String
   content        String
   createdAt      DateTime @default(now())
 }
