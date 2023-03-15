@@ -33,7 +33,7 @@ export async function createPrivateRoom(userId: string, roomProps: { otherMember
         members: { connect: [{ id: otherMember.id }, { id: userId }] },
       },
       // private rooms will be listed with the other user's username as the name of the room
-      select: { blob: true, members: { select: { username: true, publicId: true } } },
+      select: { blob: true, type: true, members: { select: { username: true, publicId: true } } },
     });
 
     // emit socket event with new room data
