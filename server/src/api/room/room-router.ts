@@ -1,26 +1,26 @@
 import { z } from "zod";
-import { createRoom } from "./controllers/create-room";
+import { createPrivateRoom } from "./controllers/create-room";
 import { getRoom } from "./controllers/get-room";
 import { sendMessage } from "./controllers/send-message";
 import { tRouter, authedProcedure, tError } from "../../config/trpc";
 
 export const roomRouter = tRouter({
-  createRoom: authedProcedure
-    .input(z.object({ name: z.string().min(3).max(20), otherMember: z.string().email() }))
+  createPrivateRoom: authedProcedure
+    .input(z.object({ otherMember: z.string().email() }))
     .mutation(async ({ ctx, input }) => {
-      const res = await createRoom(ctx.id, input);
+      const res = await createPrivateRoom(ctx.id, input);
 
       if (res.ok) {
         return res;
-      } else {
-        switch (res.message) {
-          case "Tried to create a room with a non-user":
-          case "Cannot create a room with yourself": {
-            return res;
-          }
-          default: {
-            throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
-          }
+      }
+      switch (res.message) {
+        case "Tried to create a room with a non-user":
+        case "Cannot create a room with yourself":
+        case "Room already exists with that user": {
+          return res;
+        }
+        default: {
+          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
         }
       }
     }),

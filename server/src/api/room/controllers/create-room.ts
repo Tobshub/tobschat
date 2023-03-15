@@ -3,7 +3,7 @@ import LOG from "../../../config/log";
 import { usePrisma } from "../../../config/prisma";
 import { Err, Ok } from "../../../helpers/result";
 
-export async function createRoom(userId: string, roomProps: { name: string; otherMember: string }) {
+export async function createPrivateRoom(userId: string, roomProps: { otherMember: string }) {
   try {
     const otherMember = await usePrisma.user.findUnique({
       where: { email: roomProps.otherMember },
@@ -17,12 +17,23 @@ export async function createRoom(userId: string, roomProps: { name: string; othe
       return Err("Cannot create a room with yourself");
     }
 
+    // check if a private room exists between the two users
+    const existingPrivateRoom = await usePrisma.room.findMany({
+      where: { memberIds: { hasEvery: [userId, otherMember.id] } },
+      select: { blob: true },
+    });
+
+    if (existingPrivateRoom) {
+      return Err("Room already exists with that user", existingPrivateRoom);
+    }
+
     const room = await usePrisma.room.create({
       data: {
-        name: roomProps.name,
+        name: "Private Room",
         members: { connect: [{ id: otherMember.id }, { id: userId }] },
       },
-      select: { blob: true, name: true },
+      // private rooms will be listed with the other user's username as the name of the room
+      select: { blob: true, members: { select: { username: true, publicId: true } } },
     });
 
     // emit socket event with new room data
