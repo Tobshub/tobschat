@@ -10,6 +10,7 @@ import { RoomPage, roomPageLoader } from "@pages/rooms/room";
 import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
 import FriendsPage from "@pages/user/friends";
+import { PublicProfilePage, publicProfilePageLoader } from "@pages/user/public-profile";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
         children: [
           { path: "friends", element: <FriendsPage /> },
           { path: "account", element: <>Your account</> },
+          { path: "@/:publicId", loader: publicProfilePageLoader, element: <PublicProfilePage /> },
         ],
       },
     ],
