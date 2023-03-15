@@ -11,7 +11,11 @@ export async function sendMessage(messageProps: {
   try {
     await usePrisma.room.update({
       where: { blob: messageProps.roomBlob },
-      data: { messages: { push: { ...messageProps } } },
+      data: {
+        messages: {
+          push: { content: messageProps.content, key: messageProps.key, senderPublicId: messageProps.senderPublicId },
+        },
+      },
     });
 
     return Ok({});
