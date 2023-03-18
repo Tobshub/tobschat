@@ -4,7 +4,10 @@ import { Err, Ok } from "../../../../helpers/result";
 
 export async function searchUser(username: string) {
   try {
-    const user = await usePrisma.user.findUnique({ where: { username }, select: { username: true, publicId: true } });
+    const user = await usePrisma.user.findUnique({
+      where: { username },
+      select: { username: true, publicId: true },
+    });
 
     if (!user) {
       return Err("User not found");
@@ -16,4 +19,3 @@ export async function searchUser(username: string) {
     return Err("An error occured");
   }
 }
-

@@ -12,7 +12,7 @@ export const userRouter = tRouter({
     .mutation(async ({ input }) => {
       Log.info("Sign Up Attempt");
       // replace spaces with underscores
-      const username = input.username.split(" ").join("_");
+      const username = input.username.split(" ").join("_").toLowerCase();
       const res = await newUser({ ...input, username });
       if (res.ok) {
         Log.info("Sign up success");
