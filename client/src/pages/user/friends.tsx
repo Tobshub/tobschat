@@ -63,7 +63,7 @@ export default function FriendsPage() {
           <p>
             You don't have any friends yet.{" "}
             <button className="btn btn-link p-0" onClick={() => usernameInputRef.current?.focus()}>
-              Add Friends with their public Id
+              Add Friends with their username
             </button>
           </p>
         )}

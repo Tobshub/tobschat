@@ -11,6 +11,7 @@ import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
 import FriendsPage from "@pages/user/friends";
 import { PublicProfilePage, publicProfilePageLoader } from "@pages/user/public-profile";
+import { AccountPage } from "@pages/user/account";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
         path: "/user",
         children: [
           { path: "friends", element: <FriendsPage /> },
-          { path: "account", element: <>Your account</> },
+          { path: "account", element: <AccountPage /> },
           { path: "@/:publicId", loader: publicProfilePageLoader, element: <PublicProfilePage /> },
         ],
       },
@@ -61,7 +62,4 @@ export default function App() {
   );
 }
 
-// TODO: search for users by name or publicId
-// TODO: add friends with publicId or from user search
-// TODO: create private chat with friends or start group chat with a list of friends + able to add more
-
+// TODO: start group chat with a list of friends + able to add more
