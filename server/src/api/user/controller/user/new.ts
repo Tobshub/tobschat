@@ -4,7 +4,11 @@ import { usePrisma } from "../../../../config/prisma";
 import appToken from "../../../../config/token";
 import { Err } from "../../../../helpers/result";
 
-export async function newUser(userProps: { username: string; email: string; password: string }) {
+export async function newUser(userProps: {
+  username: string;
+  email: string;
+  password: string;
+}) {
   try {
     const check = await checkUser(userProps.email, userProps.username);
     if (!check) {
@@ -29,8 +33,14 @@ export async function newUser(userProps: { username: string; email: string; pass
 }
 
 async function checkUser(email: string, username: string) {
-  const checkEmail = await usePrisma.user.findUnique({ where: { email }, select: { id: true } });
-  const checkUsername = await usePrisma.user.findUnique({ where: { username }, select: { id: true } });
+  const checkEmail = await usePrisma.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+  const checkUsername = await usePrisma.user.findFirst({
+    where: { username: { equals: username, mode: "insensitive" } },
+    select: { id: true },
+  });
 
   // check fails if a user exists with the email or username
   if (checkEmail || checkUsername) {
@@ -39,4 +49,3 @@ async function checkUser(email: string, username: string) {
 
   return true;
 }
-
