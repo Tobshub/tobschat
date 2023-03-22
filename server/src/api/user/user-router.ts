@@ -1,6 +1,6 @@
 import z from "zod";
 import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
-import { acceptFriendRequest, declineFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
+import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
 import { newUser, login, getUserRooms, getUserPrivate, searchUser, getUserPublic } from "./controller/user";
 import Log from "../../config/log";
 
@@ -186,7 +186,22 @@ function friendRequestRouter() {
           }
         }
       }),
-    // TODO: cancelFriendRequest
+    cancelFriendRequest: authedProcedure.input(z.object({requestId: z.string()})).mutation(async ({ctx, input}) => {
+      const res = await cancelFriendRequest(ctx.id, input.requestId);
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "Friend Request Not Found": 
+        case "Friend request has already been responded too": {
+          return res;
+        }
+        default: {
+          throw new tError({code: "INTERNAL_SERVER_ERROR", message: res.message})
+        }
+      }
+    })
   });
 }
 
