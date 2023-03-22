@@ -12,7 +12,7 @@ export function SidebarComponent(props: { sidebarOpen: boolean }) {
   const userLogout = useLogout();
   return (
     <header style={{ display: props.sidebarOpen ? undefined : "none" }}>
-      <IconContext.Provider value={{className: "react-icons"}} >
+      <IconContext.Provider value={{className: "react-icons text-light"}} >
       <h1 title="home page">
         <Link to="/" className="navbar-brand">
          <AiFillHome/> <span className="lg-screen-only">TobsChat</span>
@@ -22,17 +22,17 @@ export function SidebarComponent(props: { sidebarOpen: boolean }) {
         <ul className="navbar-nav">
           <li className="nav-item" title="your rooms">
             <NavLink to={"/room/list"} className="nav-link">
-              <BsFillChatDotsFill /> <span className="lg-screen-only">ROOMS</span>
+              <BsFillChatDotsFill /> <span className="lg-screen-only text-light">ROOMS</span>
             </NavLink>
           </li>
           <li className="nav-item" title="your friends">
             <NavLink to={"/user/friends"} className="nav-link">
-              <FaUserFriends/> <span className="lg-screen-only">FRIENDS</span>
+              <FaUserFriends/> <span className="lg-screen-only text-light">FRIENDS</span>
             </NavLink>
           </li>
           <li className="nav-item" title="your account">
             <NavLink to={"/user/account"} className="nav-link">
-            <MdAccountCircle /> <span className="lg-screen-only">ACCOUNT</span> 
+            <MdAccountCircle /> <span className="lg-screen-only text-light">ACCOUNT</span> 
             </NavLink>
           </li>
         </ul>

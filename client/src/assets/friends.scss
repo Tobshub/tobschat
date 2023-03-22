@@ -19,10 +19,35 @@ ul:has(.friend-request) {
     font-weight: 600;
   }
   &.request-accepted {
-    background-color: hsla(128, 87%, 54%, 0.404);
+    background-color: hsla(128, 87%, 75%, 0.404);
   }
   &.request-declined {
     background-color: hsla(2, 87%, 54%, 0.404);
   }
 }
 
+.friend-component {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  background-color: hsla(200, 87%, 80%, 0.404); 
+  padding: .2rem .4rem;
+  border-radius: 5px;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.25rem;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  .react-icons {
+    color: #000;
+    font-size: 2rem;
+  }
+}

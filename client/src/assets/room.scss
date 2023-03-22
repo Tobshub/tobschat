@@ -18,16 +18,17 @@
       margin: 0.75rem 0;
       padding: 0.2rem 0.5rem;
       border-radius: 5px;
+      max-width: 400px;
       p {
         margin: 0;
         font-weight: 600;
       }
       &.me {
-        background-color: hsla(0, 4%, 44%, 0.3);
+        margin-left: auto;
+        background-color: hsla(0, 4%, 44%, 0.6);
       }
       &.not-me {
-        background-color: hsla(0, 91%, 43%, 0.3);
-        color: white;
+        background-color: hsla(0, 91%, 43%, 0.6);
       }
     }
   }

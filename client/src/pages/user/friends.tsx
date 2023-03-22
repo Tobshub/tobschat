@@ -1,5 +1,6 @@
 import "@assets/friends.scss";
 import store from "@data/zustand";
+import { FriendComponent } from "@layouts/components/friend";
 import { socket } from "@utils/socket";
 import { trpc } from "@utils/trpc";
 import { useEffect, useRef, useState } from "react";
@@ -51,14 +52,7 @@ export default function FriendsPage() {
       </form>
       <ul className="navbar-nav">
         {friends.length ? (
-          friends.map((friend) => (
-            <li key={friend.publicId} className="nav-item">
-              <Link to={`/user/@/${friend.publicId}`}>{friend.username}</Link>
-              <button className="btn" title="New room with user">
-                +
-              </button>
-            </li>
-          ))
+          friends.map((friend) => <FriendComponent key={friend.publicId} friend={friend} />)       
         ) : (
           <p>
             You don't have any friends yet.{" "}

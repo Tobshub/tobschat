@@ -71,6 +71,7 @@ export function RoomPage() {
 
   const newMessageInputElement = useRef<HTMLInputElement>(null)
 
+
   return (
     <div className="room">
       <h2>{room.data?.value.name}</h2>
@@ -80,7 +81,14 @@ export function RoomPage() {
           {room.isInitialLoading ? (
             <>Loading...</>
           ) : messages.length ? (
-            messages.map((message) => <MessageComponent {...message} isMe={publicId === message.senderPublicId} />)
+            messages.map((message) => (
+            <MessageComponent 
+                {...message} 
+                isMe={publicId === message.senderPublicId} 
+                senderUsername={room.data?.value.members.find(
+                    mem => mem.publicId === message.senderPublicId
+                  )?.username as string} 
+                />))
           ) : (
             <p>No messages yet... Try saying hello</p>
           )}
@@ -109,9 +117,10 @@ export function RoomPage() {
   );
 }
 
-function MessageComponent(props: { content: string; createdAt: string; isMe: boolean }) {
+function MessageComponent(props: { content: string; createdAt: string; isMe: boolean, senderUsername: string }) {
   return (
     <div className={`message ${props.isMe ? "me" : "not-me"}`}>
+      <small>{props.isMe? "You:" : props.senderUsername + ":"}</small>
       <p>{props.content}</p>
       <small>{formatMessageDate(new Date(props.createdAt))}</small>
     </div>

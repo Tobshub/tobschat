@@ -1,6 +1,10 @@
 import store from "@data/zustand";
+import { FriendComponent } from "@layouts/components/friend";
 import { trpc } from "@utils/trpc";
 import { useRef, useState } from "react";
+import { IconContext } from "react-icons";
+import { BiPlus } from "react-icons/bi";
+import { FaUserMinus} from 'react-icons/fa'
 import { Link, useNavigate } from "react-router-dom";
 
 export function CreateRoomPage() {
@@ -60,13 +64,10 @@ export function CreateRoomPage() {
           </button>
           <p>Choose a friend to the create the room with.</p>
           <ul className="navbar-nav mb-3">
+            <IconContext.Provider value={{className: "react-icons"}}>
             {friends.length ? (
               friends.map((friend) => (
-                <li
-                  key={friend.publicId}
-                  className={`nav-item ${friend.publicId === selectedFriend.publicId ? "selected-friend" : ""}`}
-                >
-                  <Link to={`/user/@/${friend.publicId}`}>{friend.username}</Link>
+                <FriendComponent key={friend.publicId} friend={friend} className={`nav-item ${friend.publicId === selectedFriend.publicId ? "selected-friend" : ""}`}>
                   {friend.publicId !== selectedFriend.publicId ? (
                     <button
                       className="btn py-0"
@@ -74,19 +75,22 @@ export function CreateRoomPage() {
                       type="button"
                       onClick={() => setSelectedFriend({ publicId: friend.publicId })}
                     >
-                      +
+                      <BiPlus />
                     </button>
                   ) : (
                     <button
                       className="btn py-0"
                       title="Deselect User"
                       type="button"
-                      onClick={() => setSelectedFriend({ publicId: null })}
+                      onClick={() => {
+                        setSelectedFriend({ publicId: null })
+                        setErrorMessage("")
+                      }}
                     >
-                      -
+                     <FaUserMinus /> 
                     </button>
                   )}
-                </li>
+                </FriendComponent>
               ))
             ) : (
               <p>
@@ -96,6 +100,7 @@ export function CreateRoomPage() {
                 </Link>
               </p>
             )}
+            </IconContext.Provider>
           </ul>
         </div>
       </form>

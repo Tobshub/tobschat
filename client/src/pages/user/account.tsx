@@ -1,4 +1,5 @@
 import store from "@data/zustand";
+import { FriendComponent } from "@layouts/components/friend";
 import { Link } from "react-router-dom";
 
 // TODO: click to copy invite link
@@ -20,11 +21,7 @@ export function AccountPage() {
         <h2>Friends</h2>
       <ul className="navbar-nav">
         {user.friends.length ? (
-          user.friends.map((friend) => (
-            <li key={friend.publicId} className="nav-item">
-              <Link to={`/user/@/${friend.publicId}`}>{friend.username}</Link>
-            </li>
-          ))
+          user.friends.map((friend) => <FriendComponent key={friend.publicId} friend={friend}  />)
         ) : (
           <p>
             You don't have any friends yet.{" "}
