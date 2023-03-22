@@ -13,7 +13,11 @@ export async function sendMessage(messageProps: {
       where: { blob: messageProps.roomBlob },
       data: {
         messages: {
-          push: { content: messageProps.content, key: messageProps.key, senderPublicId: messageProps.senderPublicId },
+          push: {
+            content: messageProps.content,
+            key: messageProps.key,
+            senderPublicId: messageProps.senderPublicId,
+          },
         },
       },
     });
@@ -24,4 +28,3 @@ export async function sendMessage(messageProps: {
     return Err("an error occured");
   }
 }
-

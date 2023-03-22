@@ -9,7 +9,6 @@ export const roomRouter = tRouter({
   createPrivateRoom: authedProcedure
     .input(z.object({ otherMember: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
-      Log.info(["Creating private room", ctx.id]);
       const res = await createPrivateRoom(ctx.id, input);
 
       if (res.ok) {
@@ -20,7 +19,6 @@ export const roomRouter = tRouter({
         case "Tried to create a room with a non-user":
         case "Cannot create a room with yourself":
         case "Room already exists with that user": {
-          Log.error(["Failed to create private room", res.message]);
           return res;
         }
         default: {
@@ -29,7 +27,6 @@ export const roomRouter = tRouter({
       }
     }),
   getRoom: authedProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    Log.info(["Getting Room", input]);
     const res = await getRoom(ctx.id, input);
 
     if (res.ok) {
@@ -50,7 +47,6 @@ export const roomRouter = tRouter({
   sendMessage: authedProcedure
     .input(z.object({ senderPublicId: z.string(), content: z.string().min(1), roomBlob: z.string(), key: z.string() }))
     .mutation(async ({ input }) => {
-      Log.info(["Saving Message", input.key]);
       const res = await sendMessage(input);
 
       if (res.ok) {
