@@ -189,6 +189,7 @@ function friendRequestRouter() {
     cancelFriendRequest: authedProcedure.input(z.object({requestId: z.string()})).mutation(async ({ctx, input}) => {
       const res = await cancelFriendRequest(ctx.id, input.requestId);
       if (res.ok) {
+        Log.info(["Cancelled Friend Request", input.requestId])
         return res;
       }
 
