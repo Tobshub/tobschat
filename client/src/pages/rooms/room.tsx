@@ -69,6 +69,8 @@ export function RoomPage() {
     scrollBottom(chatContainer);
   }, [messages]);
 
+  const newMessageInputElement = useRef<HTMLInputElement>(null)
+
   return (
     <div className="room">
       <h2>{room.data?.value.name}</h2>
@@ -96,8 +98,9 @@ export function RoomPage() {
             className="form-control"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
+            ref={newMessageInputElement}
           />
-          <button type="submit" className="btn btn-primary" disabled={!newMessage}>
+          <button type="submit" className="btn btn-primary" disabled={!newMessage} onClick={() => newMessageInputElement.current?.focus()}>
             SEND
           </button>
         </div>
