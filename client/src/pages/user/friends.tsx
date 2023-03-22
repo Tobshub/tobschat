@@ -146,6 +146,12 @@ function SentFriendRequests(props: {
     };
   }, []);
 
+  const deleteRequestMutation = trpc.user.friendRequest.cancelFriendRequest.useMutation({onError(err) {
+    console.error(err)
+  }}) 
+
+  const deleteRequest = (requestId: string) => deleteRequestMutation.mutate({requestId});
+
   if (!friendRequests.length) {
     return <>You haven't sent any Friend Requests</>;
   }
@@ -173,7 +179,7 @@ function SentFriendRequests(props: {
           <span className="d-flex gap-2">
             {friendRequest.status === "WAITING" ? (
               <>
-                <button className="btn btn-outline-danger">CANCEL</button>
+                <button className="btn btn-outline-danger" onClick={() => deleteRequest(friendRequest.id)}>CANCEL</button>
               </>
             ) : (
               <button className="btn btn-outline-warning">HIDE</button>
