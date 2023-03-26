@@ -24,8 +24,9 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
 
     return Ok({
       name: room.name,
-      // send a most 50 messages to the client at once
-      messages: cursor && cursor > 0 ? room.messages.slice(cursor, cursor + 50) : room.messages.slice(0, 50),
+      // send at most 50 messages to the client at once
+      // if there is no cursor take the last 50 messages
+      messages: cursor && cursor > 0 ? room.messages.slice(cursor, cursor + 50) : room.messages.slice(-50),
       members: room.members,
     });
   } catch (err) {
