@@ -13,7 +13,6 @@ export default function registerRoomHandlers(io: Server, socket: Socket) {
   });
 
   socket.on("room:typing", (roomBlob: string, username: string | null) => {
-    Log.info(["User typing", roomBlob])
     // broadcast the username of the user typing
     socket.broadcast.to(roomBlob).emit("room:typing", username);
   })
