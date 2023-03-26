@@ -11,6 +11,7 @@ import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
 import FriendsPage from "@pages/user/friends";
 import { PublicProfilePage, publicProfilePageLoader } from "@pages/user/public-profile";
+import { LandingPage, landingPageLoader } from "@pages/landing";
 
 const router = createBrowserRouter([
   {
@@ -44,8 +45,9 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/intro",
-    element: <>Hello World</>,
+    path: "/about",
+    loader: landingPageLoader,
+    element: <LandingPage />,
   }
 ]);
 

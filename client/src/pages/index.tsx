@@ -8,7 +8,7 @@ import {  Link, redirect } from "react-router-dom";
 export async function indexPageLoader() {
   const token = getToken();
   if (!token) {
-    return redirect("/auth/login");
+    return redirect("/about");
   }
   return null;
 }
