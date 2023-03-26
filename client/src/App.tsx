@@ -11,7 +11,6 @@ import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
 import FriendsPage from "@pages/user/friends";
 import { PublicProfilePage, publicProfilePageLoader } from "@pages/user/public-profile";
-import { AccountPage } from "@pages/user/account";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +31,6 @@ const router = createBrowserRouter([
         path: "/user",
         children: [
           { path: "friends", element: <FriendsPage /> },
-          { path: "account", element: <AccountPage /> },
           { path: "@/:publicId", loader: publicProfilePageLoader, element: <PublicProfilePage /> },
         ],
       },
@@ -45,6 +43,10 @@ const router = createBrowserRouter([
       { path: "sign-up", element: <SignUpPage /> },
     ],
   },
+  {
+    path: "/intro",
+    element: <>Hello World</>,
+  }
 ]);
 
 export default function App() {

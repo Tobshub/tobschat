@@ -30,11 +30,6 @@ export function SidebarComponent(props: { sidebarOpen: boolean }) {
               <FaUserFriends/> <span className="lg-screen-only text-light">FRIENDS</span>
             </NavLink>
           </li>
-          <li className="nav-item" title="your account">
-            <NavLink to={"/user/account"} className="nav-link">
-            <MdAccountCircle /> <span className="lg-screen-only text-light">ACCOUNT</span> 
-            </NavLink>
-          </li>
         </ul>
       </nav>
       <button className="btn btn-danger" onClick={userLogout} title="logout">
