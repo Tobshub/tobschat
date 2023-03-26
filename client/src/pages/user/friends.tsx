@@ -317,7 +317,7 @@ function ConfirmFriendRequestComponent(props: { username: string; close: () => v
     return <small className="alert alert-success py-0">Friend Request Sent</small>;
   }
   return (
-    <div className={data.ok ? "overlay" : ""}>
+    <div className={data.ok ? "overlay" : ""} style={{color: "black"}}>
       {data.ok ? (
         <div className="overlay-container">
           {requestError ? (
