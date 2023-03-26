@@ -1,4 +1,5 @@
 import { Server, Socket } from "socket.io";
+import Log from "../../config/log";
 
 export default function registerRoomHandlers(io: Server, socket: Socket) {
   // join a room's room to recieve all event broadcasted to it
@@ -10,6 +11,12 @@ export default function registerRoomHandlers(io: Server, socket: Socket) {
     // broadcast new message to users in the room
     socket.broadcast.to(message.roomBlob).emit("room:message", message);
   });
+
+  socket.on("room:typing", (roomBlob: string, username: string | null) => {
+    Log.info(["User typing", roomBlob])
+    // broadcast the username of the user typing
+    socket.broadcast.to(roomBlob).emit("room:typing", username);
+  })
 
   // stop listening to events in a room
   socket.on("room:leave", (roomBlob) => {

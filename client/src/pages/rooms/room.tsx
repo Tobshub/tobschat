@@ -23,6 +23,7 @@ export function RoomPage() {
   const roomBlob = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomBlob, { staleTime: 0 });
   const publicId = store.get("publicId");
+  const username = store.get("username")
   const [messages, setMessages] = useState(room.data?.value.messages ?? []);
   const [newMessage, setNewMessage] = useState("");
   const sendMessageMut = trpc.room.sendMessage.useMutation({
@@ -51,17 +52,39 @@ export function RoomPage() {
     setNewMessage("");
   };
 
+  const [typing, setTyping] = useState<{isTyping: boolean; username: string | null}>({isTyping: false, username: null});
+
+  // join room and
+  // listen to room events
   useEffect(() => {
     socket.emit("room:join", roomBlob);
     socket.on("room:message", (message) => {
       setMessages((state) => [...state, message]);
     });
+    socket.on("room:typing", (username: string | null) => {
+      if (username) {
+        setTyping({isTyping: true, username})
+      } else {
+        setTyping({isTyping: false, username: null})
+      }
+    })
 
     return () => {
       socket.off("room:message");
+      socket.off("room:typing")
       socket.emit("room:leave", roomBlob);
     };
   }, []);
+
+  // emit `room:typing` event from socket
+  // when user starts/stops typing
+  useEffect(() => {
+    if (newMessage.length && username) {
+      socket.emit("room:typing", roomBlob, username) 
+    } else {
+      socket.emit("room:typing", roomBlob, null)
+    }
+  }, [!!newMessage.length])
 
   const chatContainer = useRef<HTMLDivElement>(null);
   // scroll to the bottom when new messages come in
@@ -100,7 +123,7 @@ export function RoomPage() {
           sendMessage();
         }}
       >
-        <div className="input-group mb-3">
+        <div className="input-group">
           <input
             placeholder="type message..."
             className="form-control"
@@ -112,6 +135,7 @@ export function RoomPage() {
             SEND
           </button>
         </div>
+          {typing.isTyping ? <small>{typing.username} is typing...</small> : null}
       </form>
     </div>
   );
