@@ -4,7 +4,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import {IconContext} from "react-icons";
 import {BsFillChatDotsFill} from "react-icons/bs";
 import {FaUserFriends} from "react-icons/fa";
-import {MdAccountCircle, MdLogout, MdOutlineHome} from "react-icons/md";
+import { MdLogout } from "react-icons/md";
 import {AiFillHome} from "react-icons/ai"
 
 export function SidebarComponent(props: { sidebarOpen: boolean }) {
@@ -13,21 +13,21 @@ export function SidebarComponent(props: { sidebarOpen: boolean }) {
   return (
     <header style={{ display: props.sidebarOpen ? undefined : "none" }}>
       <IconContext.Provider value={{className: "react-icons text-light"}} >
-      <h1 title="home page">
-        <Link to="/" className="navbar-brand">
-         <AiFillHome/> <span className="lg-screen-only">TobsChat</span>
-        </Link>
-      </h1>
       <nav className="navbar">
-        <ul className="navbar-nav">
+        <ul className="navbar-nav text-light">
+          <li className="nav-item">
+            <NavLink to="/" className="nav-link" title="home">
+             <AiFillHome/> <span className="lg-screen-only text-light">TobsChat</span>
+            </NavLink>
+          </li>
           <li className="nav-item" title="your rooms">
             <NavLink to={"/room/list"} className="nav-link">
               <BsFillChatDotsFill /> <span className="lg-screen-only text-light">ROOMS</span>
             </NavLink>
           </li>
           <li className="nav-item" title="your friends">
-            <NavLink to={"/user/friends"} className="nav-link">
-              <FaUserFriends/> <span className="lg-screen-only text-light">FRIENDS</span>
+            <NavLink to={"/user/friends"} className="nav-link text-light">
+              <FaUserFriends/> <span className="lg-screen-only">FRIENDS</span>
             </NavLink>
           </li>
         </ul>

@@ -1,12 +1,25 @@
 .page {
   position: relative;
   display: flex;
+  align-items: stretch;
   gap: 0.5rem;
   overflow: hidden;
 
+  .sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
   header {
+    height: 100%;
     max-width: 300px;
-    padding: 1rem 0 0 1rem;
+    padding: 1rem 0 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     h1 {
       font-size: 1.25rem;
@@ -62,12 +75,18 @@
     justify-content: flex-start;
     gap: 0;
 
+    .sidebar {
+      height: fit-content;
+      display: block;
+    }
     .sidebar-toggler {
       display: none;
     }
 
     header {
+      height: fit-content;
       display: flex;
+      flex-direction: row;
       padding: 0 1rem;
       max-width: 100%;
       justify-content: space-between;

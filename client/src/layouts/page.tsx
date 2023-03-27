@@ -26,7 +26,7 @@ export default function Page() {
         </div>
       )}
       <div className={"page"}>
-        <div>
+        <div className="sidebar">
           <div className="sidebar-toggler" onClick={() => setSidebarOpen((state) => !state)}>
             <button className="btn py-0" style={{ fontSize: "2rem" }}>
               {sidebarOpen ? "<=" : "=>"}
