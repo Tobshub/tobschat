@@ -16,12 +16,17 @@ export function LandingPage() {
         <nav className="navbar w-100 px-5 py-1">
           <h1>TobsChat</h1>
           <ul className="navbar-nav flex-row gap-3">
+          { !user.loggedIn ? 
+            <>
             <li className="nav-item">
               <Link className="btn btn-outline-secondary text-reset" to={"/auth/login"}>Login</Link>
             </li>
             <li className="nav-item">
               <Link className="btn btn-outline-primary text-reset" to={"/auth/sign-up"}>Sign Up</Link>
             </li>
+            </>
+            : <li><Link className="btn btn-outline-success text-reset" to={"/"}>Continue Chatting</Link></li>
+        }
           </ul>
       </nav>
 

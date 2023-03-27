@@ -10,9 +10,16 @@ import { RoomPage, roomPageLoader } from "@pages/rooms/room";
 import Page from "layouts/page";
 import { RoomListPage } from "@pages/rooms/room-list";
 import FriendsPage from "@pages/user/friends";
-import { PublicProfilePage, publicProfilePageLoader } from "@pages/user/public-profile";
+import {
+  PublicProfilePage,
+  publicProfilePageLoader,
+} from "@pages/user/public-profile";
 import { LandingPage, landingPageLoader } from "@pages/landing";
 
+// TODO: Support for user's to edit their account information
+// Notifications when you receive a message
+// Friends' online status
+// Usage instructions on the landing page
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,7 +39,11 @@ const router = createBrowserRouter([
         path: "/user",
         children: [
           { path: "friends", element: <FriendsPage /> },
-          { path: "@/:publicId", loader: publicProfilePageLoader, element: <PublicProfilePage /> },
+          {
+            path: "@/:publicId",
+            loader: publicProfilePageLoader,
+            element: <PublicProfilePage />,
+          },
         ],
       },
     ],
@@ -48,7 +59,7 @@ const router = createBrowserRouter([
     path: "/about",
     loader: landingPageLoader,
     element: <LandingPage />,
-  }
+  },
 ]);
 
 export default function App() {
