@@ -54,7 +54,13 @@ function loadUserDataToStore() {
     },
   });
 
-  return [user.data?.value.username];
+  useEffect(() => {
+    if (user.data && user.data.ok) {
+      store.setAll(user.data.value)
+    }
+  }, [user.data])
+
+  return [user.data?.value];
 }
 
 /** Monitor socket status and let user know if the connection status is bad */

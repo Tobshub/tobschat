@@ -3,7 +3,7 @@ import { FriendComponent } from "@layouts/components/friend";
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { useEffect } from "react";
-import {  Link, redirect } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 
 export async function indexPageLoader() {
   const token = getToken();
@@ -21,7 +21,7 @@ export default function IndexPage() {
     socket.emit("user:load", getToken());
   }, []);
 
-  const user = store.getAll();
+  const user = store.useAll();
   return (
     <div>
       <div className="d-flex gap-3 align-items-center mb-3">
