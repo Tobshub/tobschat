@@ -6,6 +6,7 @@ import {BsFillChatDotsFill} from "react-icons/bs";
 import {FaUserFriends} from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import {AiFillHome} from "react-icons/ai"
+import store from "@data/zustand";
 
 export function SidebarComponent(props: { sidebarOpen: boolean }) {
 
@@ -50,6 +51,7 @@ export function useLogout() {
   const navigate = useNavigate();
   return () => {
     removeToken();
+    store.reset();
     socket.offAny();
     socket.emit("user:logout");
     navigate("/auth/login");
