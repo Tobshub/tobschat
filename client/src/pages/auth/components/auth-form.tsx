@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 import "./auth-form.scss";
 import {MdCancel} from "react-icons/md"
 import { useNavigate } from "react-router-dom";
+import LoaderGIF from "@assets/images/loading-gif.gif"
 
 export default function AuthForm(props: PropsWithChildren & { title: string; next: (...args: any) => void }) {
   const navigate = useNavigate();
@@ -26,3 +27,11 @@ export default function AuthForm(props: PropsWithChildren & { title: string; nex
   );
 }
 
+
+export function ButtonWithLoader(props: PropsWithChildren & {disabled: boolean}) {
+  return (
+    <button type="submit" className="btn btn-outline-success" disabled={props.disabled}>
+      {!props.disabled? props.children : <img src={LoaderGIF} height={20} />}
+    </button>
+  );
+}

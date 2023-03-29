@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import AuthForm from "./components/auth-form";
+import AuthForm, { ButtonWithLoader } from "./components/auth-form";
 import { Link, useNavigate } from "react-router-dom";
 import { trpc } from "@utils/trpc";
 import { setToken } from "@utils/token";
@@ -61,9 +61,9 @@ export function LoginPage() {
       <small style={{ display: "block" }}>
         Don't have an account? <Link to={"../sign-up"}>Sign Up</Link> instead.
       </small>
-      <button type="submit" className="btn btn-outline-success" disabled={loginMut.isLoading}>
+      <ButtonWithLoader disabled={loginMut.isLoading}>
         Log In
-      </button>
+      </ButtonWithLoader>
     </AuthForm>
   );
 }
