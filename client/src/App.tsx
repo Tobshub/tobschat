@@ -15,6 +15,7 @@ import {
   publicProfilePageLoader,
 } from "@pages/user/public-profile";
 import { LandingPage, landingPageLoader } from "@pages/landing";
+import { SettingsPage } from "@pages/user/settings";
 
 // TODO: Support for user's to edit their account information
 // Notifications when you receive a message
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
             loader: publicProfilePageLoader,
             element: <PublicProfilePage />,
           },
+          { path: "settings", element: <SettingsPage /> },
         ],
       },
     ],
