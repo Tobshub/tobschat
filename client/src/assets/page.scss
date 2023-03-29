@@ -35,6 +35,14 @@
       align-items: center;
       gap: 0.2rem;
     }
+
+    li.nav-item {
+      transition: scale 150ms;
+    }
+
+    li.nav-item:has(.sidebar-active) {
+      scale: 1.2;
+    }
   }
 
   main {
