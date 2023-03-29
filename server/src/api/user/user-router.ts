@@ -1,13 +1,37 @@
 import z from "zod";
-import { tRouter, tProcedure, tError, authedProcedure } from "../../config/trpc";
-import { acceptFriendRequest, cancelFriendRequest, declineFriendRequest, getFriendRequests, sendFriendRequest } from "./controller/friend";
-import { newUser, login, getUserRooms, getUserPrivate, searchUser, getUserPublic } from "./controller/user";
+import {
+  tRouter,
+  tProcedure,
+  tError,
+  authedProcedure,
+} from "../../config/trpc";
+import {
+  acceptFriendRequest,
+  cancelFriendRequest,
+  declineFriendRequest,
+  getFriendRequests,
+  sendFriendRequest,
+} from "./controller/friend";
+import {
+  newUser,
+  login,
+  getUserRooms,
+  getUserPrivate,
+  searchUser,
+  getUserPublic,
+  editUsername,
+  editUserBio,
+} from "./controller/user";
 import Log from "../../config/log";
 
 export const userRouter = tRouter({
   new: tProcedure
     .input(
-      z.object({ email: z.string().email(), password: z.string().min(8).max(64), username: z.string().min(5).max(20) })
+      z.object({
+        email: z.string().email(),
+        password: z.string().min(8).max(64),
+        username: z.string().min(5).max(20),
+      })
     )
     .mutation(async ({ input }) => {
       // replace spaces with underscores
@@ -22,25 +46,33 @@ export const userRouter = tRouter({
           return res;
         }
         default: {
-          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
         }
       }
     }),
-  login: tProcedure.input(z.object({ email: z.string().email(), password: z.string() })).mutation(async ({ input }) => {
-    const res = await login(input);
-    if (res.ok) {
-      Log.info("Login Success");
-      return res;
-    }
-    switch (res.message) {
-      case "not found": {
+  login: tProcedure
+    .input(z.object({ email: z.string().email(), password: z.string() }))
+    .mutation(async ({ input }) => {
+      const res = await login(input);
+      if (res.ok) {
+        Log.info("Login Success");
         return res;
       }
-      default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+      switch (res.message) {
+        case "not found": {
+          return res;
+        }
+        default: {
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
+        }
       }
-    }
-  }),
+    }),
   userRooms: authedProcedure.query(async ({ ctx }) => {
     const res = await getUserRooms(ctx.id);
 
@@ -54,7 +86,10 @@ export const userRouter = tRouter({
         throw new tError({ code: "NOT_FOUND", ...res });
       }
       default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+        throw new tError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: res.message,
+        });
       }
     }
   }),
@@ -70,43 +105,99 @@ export const userRouter = tRouter({
         throw new tError({ code: "NOT_FOUND", message: res.message });
       }
       default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+        throw new tError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: res.message,
+        });
       }
     }
   }),
-  getUserPublic: tProcedure.input(z.object({ publicId: z.string() })).query(async ({ input }) => {
-    const res = await getUserPublic(input.publicId);
+  getUserPublic: tProcedure
+    .input(z.object({ publicId: z.string() }))
+    .query(async ({ input }) => {
+      const res = await getUserPublic(input.publicId);
 
-    if (res.ok) {
-      return res;
-    }
-
-    switch (res.message) {
-      case "User not found": {
-        throw new tError({ code: "NOT_FOUND", message: res.message });
-      }
-      default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
-      }
-    }
-  }),
-  searchUser: tProcedure.input(z.object({ username: z.string() })).query(async ({ input }) => {
-    const res = await searchUser(input.username);
-
-    if (res.ok) {
-      return res;
-    }
-
-    switch (res.message) {
-      case "User not found": {
+      if (res.ok) {
         return res;
       }
-      default: {
-        throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+
+      switch (res.message) {
+        case "User not found": {
+          throw new tError({ code: "NOT_FOUND", message: res.message });
+        }
+        default: {
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
+        }
       }
-    }
-  }),
+    }),
+  searchUser: tProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ input }) => {
+      const res = await searchUser(input.username);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "User not found": {
+          return res;
+        }
+        default: {
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
+        }
+      }
+    }),
   friendRequest: friendRequestRouter(),
+  editUsername: authedProcedure
+    .input(z.object({ username: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await editUsername(ctx.id, input.username);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "Username is already taken.":
+        case "You already have that username.": {
+          return res;
+        }
+        default: {
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
+        }
+      }
+    }),
+  editUserBio: authedProcedure
+    .input(z.object({ bio: z.string().max(200) }))
+    .mutation(async ({ ctx, input }) => {
+      const res = await editUserBio(ctx.id, input.bio);
+
+      if (res.ok) {
+        return res;
+      }
+
+      switch (res.message) {
+        case "User not found.": {
+          throw new tError({ code: "NOT_FOUND", message: res.message });
+        }
+        default: {
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
+        }
+      }
+    }),
 });
 
 function friendRequestRouter() {
@@ -123,7 +214,10 @@ function friendRequestRouter() {
           throw new tError({ code: "NOT_FOUND", message: res.message });
         }
         default: {
-          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+          throw new tError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: res.message,
+          });
         }
       }
     }),
@@ -148,26 +242,34 @@ function friendRequestRouter() {
             throw new tError({ code: "FORBIDDEN", message: res.message });
           }
           default: {
-            throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+            throw new tError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: res.message,
+            });
           }
         }
       }),
-    acceptFriendRequest: authedProcedure.input(z.object({ requestId: z.string() })).mutation(async ({ ctx, input }) => {
-      const res = await acceptFriendRequest(ctx.id, input.requestId);
+    acceptFriendRequest: authedProcedure
+      .input(z.object({ requestId: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const res = await acceptFriendRequest(ctx.id, input.requestId);
 
-      if (res.ok) {
-        return res;
-      }
-
-      switch (res.message) {
-        case "User hasn't sent you a friend request!": {
+        if (res.ok) {
           return res;
         }
-        default: {
-          throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+
+        switch (res.message) {
+          case "User hasn't sent you a friend request!": {
+            return res;
+          }
+          default: {
+            throw new tError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: res.message,
+            });
+          }
         }
-      }
-    }),
+      }),
     declineFriendRequest: authedProcedure
       .input(z.object({ requestId: z.string() }))
       .mutation(async ({ ctx, input }) => {
@@ -182,27 +284,34 @@ function friendRequestRouter() {
             return res;
           }
           default: {
-            throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
+            throw new tError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: res.message,
+            });
           }
         }
       }),
-    cancelFriendRequest: authedProcedure.input(z.object({requestId: z.string()})).mutation(async ({ctx, input}) => {
-      const res = await cancelFriendRequest(ctx.id, input.requestId);
-      if (res.ok) {
-        Log.info(["Cancelled Friend Request", input.requestId])
-        return res;
-      }
-
-      switch (res.message) {
-        case "Friend Request Not Found": 
-        case "Friend request has already been responded too": {
+    cancelFriendRequest: authedProcedure
+      .input(z.object({ requestId: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const res = await cancelFriendRequest(ctx.id, input.requestId);
+        if (res.ok) {
+          Log.info(["Cancelled Friend Request", input.requestId]);
           return res;
         }
-        default: {
-          throw new tError({code: "INTERNAL_SERVER_ERROR", message: res.message})
+
+        switch (res.message) {
+          case "Friend Request Not Found":
+          case "Friend request has already been responded too": {
+            return res;
+          }
+          default: {
+            throw new tError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: res.message,
+            });
+          }
         }
-      }
-    })
+      }),
   });
 }
-

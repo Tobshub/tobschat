@@ -3,4 +3,4 @@ export { newUser } from "./new";
 export { login } from "./login";
 export { getUserRooms } from "./rooms";
 export { searchUser } from "./search-users";
-
+export { editUsername, editUserBio } from "./edit";
