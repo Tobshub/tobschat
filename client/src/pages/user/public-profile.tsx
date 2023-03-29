@@ -1,12 +1,7 @@
 import { trpc } from "@utils/trpc";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 
-export async function publicProfilePageLoader({ params }: LoaderFunctionArgs) {
-  const { publicId } = params;
-  return publicId;
-}
-
-export function PublicProfilePage() {
+export default function PublicProfilePage() {
   const publicId = useLoaderData() as string;
   const publicProfile = trpc.user.getUserPublic.useQuery({ publicId });
 

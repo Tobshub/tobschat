@@ -7,7 +7,7 @@ import { BiPlus } from "react-icons/bi";
 import { FaUserMinus} from 'react-icons/fa'
 import { Link, useNavigate } from "react-router-dom";
 
-export function CreateRoomPage() {
+export default function CreateRoomPage() {
   // TODO: support for creating groups
   const roomNameRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState("");

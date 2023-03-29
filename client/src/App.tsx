@@ -1,22 +1,23 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import IndexPage, { indexPageLoader } from "./pages";
 import TRPCProvider from "@utils/trpc";
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { socket } from "@utils/socket";
-import { SignUpPage } from "@pages/auth/signup";
-import { LoginPage } from "@pages/auth/login";
-import { CreateRoomPage } from "@pages/rooms/create-room";
-import { RoomPage, roomPageLoader } from "@pages/rooms/room";
-import Page from "layouts/page";
-import { RoomListPage } from "@pages/rooms/room-list";
-import FriendsPage from "@pages/user/friends";
-import {
-  PublicProfilePage,
-  publicProfilePageLoader,
-} from "@pages/user/public-profile";
-import { LandingPage, landingPageLoader } from "@pages/landing";
-import { SettingsPage } from "@pages/user/settings";
 import { ErrorPage } from "@pages/error";
+
+// import route loaders 
+import { landingPageLoader, roomPageLoader, indexPageLoader, publicProfilePageLoader } from "@pages/loaders";
+// lazy import pages
+const LandingPage = lazy(() => import("@pages/landing"));
+const IndexPage = lazy(() => import("./pages"));
+const SignUpPage = lazy(() => import("@pages/auth/signup"))
+const LoginPage = lazy(() => import("@pages/auth/login"))
+const CreateRoomPage = lazy(() => import("@pages/rooms/create-room"))
+const Page = lazy(() => import("layouts/page"));
+const RoomListPage = lazy(() => import("@pages/rooms/room-list"))
+const RoomPage = lazy(() => import("@pages/rooms/room"));
+const FriendsPage = lazy(() => import("@pages/user/friends"))
+const PublicProfilePage = lazy(() => import("@pages/user/public-profile"))
+const SettingsPage = lazy(() => import("@pages/user/settings"))
 
 // TODO: Support for user's to edit their account information
 // Notifications when you receive a message
@@ -76,7 +77,9 @@ export default function App() {
 
   return (
     <TRPCProvider>
-      <RouterProvider router={router} />
+      <Suspense fallback={<>Loading...</>}>
+        <RouterProvider router={router} />
+      </Suspense>
     </TRPCProvider>
   );
 }

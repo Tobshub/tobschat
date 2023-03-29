@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import store from "@data/zustand";
 
-export function RoomListPage() {
+export default function RoomListPage() {
   const navigate = useNavigate();
   const userLogout = useLogout();
   const publicId = store.get("publicId");

@@ -3,7 +3,7 @@ import store from "@data/zustand";
 import { socket } from "@utils/socket";
 import { trpc } from "@utils/trpc";
 import { SidebarComponent } from "./components/sidebar";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { getToken } from "@utils/token";
 
@@ -35,7 +35,9 @@ export default function Page() {
           <SidebarComponent sidebarOpen={sidebarOpen} />
         </div>
         <main>
-          <Outlet />
+          <Suspense fallback={<>Loading...</>}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </>

@@ -8,11 +8,11 @@ export function ErrorPage() {
       <small>{"message" in error? error.message : null}</small>
       <p>
         Don't panic. One of these solutions should work:
-        <ul>
-          <li><Link to="/">Go to home</Link></li>
-          <li><button className="btn btn-link p-0" onClick={() => window.location.reload()}>Reload the page</button></li>
-        </ul>
       </p>
+      <ul>
+        <li><Link to="/">Go to home</Link></li>
+        <li><button className="btn btn-link p-0" onClick={() => window.location.reload()}>Reload the page</button></li>
+      </ul>
     </div>
   )
 }

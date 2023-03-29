@@ -3,15 +3,7 @@ import { FriendComponent } from "@layouts/components/friend";
 import { socket } from "@utils/socket";
 import { getToken } from "@utils/token";
 import { useEffect } from "react";
-import { Link, redirect } from "react-router-dom";
-
-export async function indexPageLoader() {
-  const token = getToken();
-  if (!token) {
-    return redirect("/about");
-  }
-  return null;
-}
+import { Link } from "react-router-dom";
 
 // TODO: click to copy invite link
 // TODO: set up adding friends through invite link

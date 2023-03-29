@@ -1,15 +1,8 @@
 import { getToken } from "@utils/token";
 import { Link, useLoaderData } from "react-router-dom";
 
-export async function landingPageLoader() {
-  const token = getToken();
-  if (token) {
-    return { loggedIn: true };
-  }
-  return { loggedIn: false };
-}
 
-export function LandingPage() {
+export default function LandingPage() {
   const user = useLoaderData() as { loggedIn: boolean };
   return (
     <div className="d-flex flex-column justify-content-start align-items-center py-4">

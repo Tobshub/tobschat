@@ -6,11 +6,6 @@ import { trpc } from "@utils/trpc";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { LoaderFunctionArgs, useLoaderData } from "react-router-dom";
 
-export async function roomPageLoader({ params }: LoaderFunctionArgs) {
-  const { blob } = params;
-  return blob;
-}
-
 function genId() {
   return (Math.random() + 1).toString(36).substring(2);
 }
@@ -19,7 +14,7 @@ function scrollBottom(ref: RefObject<HTMLDivElement>) {
   ref.current?.scrollBy({ behavior: "smooth", top: ref.current?.scrollHeight });
 }
 
-export function RoomPage() {
+export default function RoomPage() {
   const roomBlob = useLoaderData() as string;
   const room = trpc.room.getRoom.useQuery(roomBlob, { staleTime: 0 });
   const publicId = store.get("publicId");

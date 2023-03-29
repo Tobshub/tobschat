@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { trpc } from "@utils/trpc";
 import { setToken } from "@utils/token";
 
-export function LoginPage() {
+export default function LoginPage() {
   const [userProps, setUserProps] = useState({ email: "", password: "" });
 
   const handleChange = (name: string, content: string) => setUserProps((state) => ({ ...state, [name]: content }));
