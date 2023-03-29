@@ -16,6 +16,7 @@ import {
 } from "@pages/user/public-profile";
 import { LandingPage, landingPageLoader } from "@pages/landing";
 import { SettingsPage } from "@pages/user/settings";
+import { ErrorPage } from "@pages/error";
 
 // TODO: Support for user's to edit their account information
 // Notifications when you receive a message
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Page />,
+    errorElement: <ErrorPage />,
     loader: indexPageLoader /* go to /auth if token is missing */,
     children: [
       { index: true, element: <IndexPage /> },
