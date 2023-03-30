@@ -27,11 +27,11 @@ const isFunction = (fn: unknown): fn is Function => typeof fn === "function";
  *   ...
  * };
  */
-export const createGlobalStore = <State extends object>(initialState: State) => {
+export const createGlobalStore = <State extends object>(initialState: State, store_name?: string, store_storage?: Storage) => {
   const store = create<State>()(
     persist(() => structuredClone(initialState), {
-      name: "tobschat-global-store",
-      storage: createJSONStorage(() => sessionStorage),
+      name: store_name ?? "tobschat-global-store",
+      storage: createJSONStorage(() => store_storage ?? sessionStorage),
       partialize: (state) => ({ ...state }),
     })
   );
