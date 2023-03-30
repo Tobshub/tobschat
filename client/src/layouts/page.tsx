@@ -4,8 +4,9 @@ import { socket } from "@utils/socket";
 import { trpc } from "@utils/trpc";
 import { SidebarComponent } from "./components/sidebar";
 import { Suspense, useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { getToken } from "@utils/token";
+import permissions from "@data/permission";
 
 export default function Page() {
   // load username to context
@@ -18,16 +19,20 @@ export default function Page() {
   return (
     <>
       {isDisconnected && (
-        <div className="alert alert-danger alert-sm py-0">
+        <div className="alert alert-danger alert-sm py-0 rounded-bottom">
           <span className=" fs-6 text-muted">Server connection timed out!</span>
           <button className="btn btn-link py-0" onClick={forceConnect}>
             Re-connect
           </button>
         </div>
       )}
+      <RequestNotificationComponent />
       <div className={"page"}>
         <div className="sidebar">
-          <div className="sidebar-toggler" onClick={() => setSidebarOpen((state) => !state)}>
+          <div
+            className="sidebar-toggler"
+            onClick={() => setSidebarOpen((state) => !state)}
+          >
             <button className="btn py-0" style={{ fontSize: "2rem" }}>
               {sidebarOpen ? "<=" : "=>"}
             </button>
@@ -44,6 +49,24 @@ export default function Page() {
   );
 }
 
+function RequestNotificationComponent() {
+  const [hasNotificationAccess, setHasNotificationAccess] = permissions.use("notifications");
+  useEffect(() => {
+    Notification.permission === "granted"? setHasNotificationAccess(state => ({...state, all: true})) : null;
+  }, [])
+  if (hasNotificationAccess.all) {
+    return null;
+  }
+  return (
+    <div className="alert alert-warning alert-sm py-0 rounded-0">
+      <small>
+        <Link to={"/user/settings#notifications"}>Turn on Notifications</Link>{" "}
+        to know when you have a message.
+      </small>
+    </div>
+  )
+}
+
 /** Load the user's email to `UserContext` */
 function loadUserDataToStore() {
   const user = trpc.user.getUserPrivate.useQuery(undefined, {
@@ -58,9 +81,9 @@ function loadUserDataToStore() {
 
   useEffect(() => {
     if (user.data && user.data.ok) {
-      store.setAll(user.data.value)
+      store.setAll(user.data.value);
     }
-  }, [user.data])
+  }, [user.data]);
 
   return [user.data?.value];
 }
@@ -89,4 +112,3 @@ function socketStatus() {
 
   return [isDisconnected, forceConnect] as const;
 }
-
