@@ -11,10 +11,16 @@ export async function getUserPrivate(id: string) {
         email: true,
         username: true,
         publicId: true,
-        friendsWith: { select: { username: true, publicId: true } },
-        friendsOf: { select: { username: true, publicId: true } },
+        friendsWith: {
+          select: { username: true, publicId: true, online: true },
+        },
+        friendsOf: { select: { username: true, publicId: true, online: true } },
         receivedFriendRequests: {
-          select: { id: true, status: true, sender: { select: { publicId: true, username: true } } },
+          select: {
+            id: true,
+            status: true,
+            sender: { select: { publicId: true, username: true } },
+          },
         },
       },
     });
@@ -56,4 +62,3 @@ export async function getUserPublic(publicId: string) {
     return Err("An error occured", error);
   }
 }
-
