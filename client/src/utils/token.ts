@@ -13,6 +13,8 @@ export function getToken(): string | undefined {
 
 /** remove token */
 export function removeToken() {
+  const token = getToken();
   localStorage.removeItem(TOKEN);
+  return token;
 }
 
