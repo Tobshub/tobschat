@@ -45,18 +45,32 @@ export default function FriendsPage() {
         }}
       >
         <label className="input-group-text">Username:</label>
-        <input className="form-control" type="search" style={{ maxWidth: "500px" }} ref={usernameInputRef} />
+        <input
+          className="form-control"
+          type="search"
+          style={{ maxWidth: "500px" }}
+          ref={usernameInputRef}
+        />
         <button className="btn btn-outline-secondary" type="submit">
           SEARCH
         </button>
       </form>
       <ul className="navbar-nav">
         {friends.length ? (
-          friends.map((friend) => <FriendComponent key={friend.publicId} friend={friend} />)       
+          friends.map((friend) => (
+            <FriendComponent
+              key={friend.publicId}
+              friend={friend}
+              className={friend.online ? "online" : "offline"}
+            />
+          ))
         ) : (
           <p>
             You don't have any friends yet.{" "}
-            <button className="btn btn-link p-0" onClick={() => usernameInputRef.current?.focus()}>
+            <button
+              className="btn btn-link p-0"
+              onClick={() => usernameInputRef.current?.focus()}
+            >
               Add Friends with their username
             </button>
           </p>
@@ -79,7 +93,9 @@ export default function FriendsPage() {
           <h3>Received</h3>
           {friendRequests.data ? (
             <ReceivedFriendRequests
-              receivedFriendRequests={friendRequests.data.value.receivedFriendRequests}
+              receivedFriendRequests={
+                friendRequests.data.value.receivedFriendRequests
+              }
               refetchFriends={refetchFriends}
             />
           ) : (
@@ -99,12 +115,16 @@ function SentFriendRequests(props: {
   }[];
   refetchFriends: () => Promise<void>;
 }) {
-  const [friendRequests, setFriendRequests] = useState(props.sentFriendRequests);
+  const [friendRequests, setFriendRequests] = useState(
+    props.sentFriendRequests
+  );
 
   useEffect(() => {
     // update request that has been accepted
     socket.on("friend_request:accepted", (requestId) => {
-      const index = friendRequests.findIndex((request) => request.id === requestId);
+      const index = friendRequests.findIndex(
+        (request) => request.id === requestId
+      );
       if (index >= 0) {
         setFriendRequests((state) => {
           state[index].status = "ACCEPTED";
@@ -115,7 +135,9 @@ function SentFriendRequests(props: {
     });
     // update request that has been rejected
     socket.on("friend_request:declined", (requestId) => {
-      const index = friendRequests.findIndex((request) => request.id === requestId);
+      const index = friendRequests.findIndex(
+        (request) => request.id === requestId
+      );
       if (index >= 0) {
         setFriendRequests((state) => {
           state[index].status = "DECLINED";
@@ -140,11 +162,15 @@ function SentFriendRequests(props: {
     };
   }, []);
 
-  const deleteRequestMutation = trpc.user.friendRequest.cancelFriendRequest.useMutation({onError(err) {
-    console.error(err)
-  }}) 
+  const deleteRequestMutation =
+    trpc.user.friendRequest.cancelFriendRequest.useMutation({
+      onError(err) {
+        console.error(err);
+      },
+    });
 
-  const deleteRequest = (requestId: string) => deleteRequestMutation.mutate({requestId});
+  const deleteRequest = (requestId: string) =>
+    deleteRequestMutation.mutate({ requestId });
 
   if (!friendRequests.length) {
     return <>You haven't sent any Friend Requests</>;
@@ -168,12 +194,20 @@ function SentFriendRequests(props: {
               : friendRequest.status === "DECLINED"
               ? "You are not"
               : "You want to be"}{" "}
-            <Link to={`/user/@/${friendRequest.receiver.publicId}`}>{friendRequest.receiver.username}</Link>'s friend!
+            <Link to={`/user/@/${friendRequest.receiver.publicId}`}>
+              {friendRequest.receiver.username}
+            </Link>
+            's friend!
           </span>
           <span className="d-flex gap-2">
             {friendRequest.status === "WAITING" ? (
               <>
-                <button className="btn btn-outline-danger" onClick={() => deleteRequest(friendRequest.id)}>CANCEL</button>
+                <button
+                  className="btn btn-outline-danger"
+                  onClick={() => deleteRequest(friendRequest.id)}
+                >
+                  CANCEL
+                </button>
               </>
             ) : (
               <button className="btn btn-outline-warning">HIDE</button>
@@ -193,7 +227,9 @@ function ReceivedFriendRequests(props: {
   }[];
   refetchFriends: () => Promise<void>;
 }) {
-  const [friendRequests, setFriendRequests] = useState(props.receivedFriendRequests);
+  const [friendRequests, setFriendRequests] = useState(
+    props.receivedFriendRequests
+  );
 
   useEffect(() => {
     socket.on("friend_request:new", (friendRequest) => {
@@ -205,9 +241,12 @@ function ReceivedFriendRequests(props: {
     };
   }, []);
 
-  const acceptFriendRequestMut = trpc.user.friendRequest.acceptFriendRequest.useMutation();
+  const acceptFriendRequestMut =
+    trpc.user.friendRequest.acceptFriendRequest.useMutation();
   const acceptFriendRequest = (requestId: string) => {
-    const index = friendRequests.findIndex((request) => request.id === requestId);
+    const index = friendRequests.findIndex(
+      (request) => request.id === requestId
+    );
     if (index >= 0) {
       setFriendRequests((state) => {
         state[index].status = "ACCEPTED";
@@ -221,9 +260,12 @@ function ReceivedFriendRequests(props: {
     }
   };
 
-  const declineFriendRequestMut = trpc.user.friendRequest.declineFriendRequest.useMutation();
+  const declineFriendRequestMut =
+    trpc.user.friendRequest.declineFriendRequest.useMutation();
   const declineFriendRequest = (requestId: string) => {
-    const index = friendRequests.findIndex((request) => request.id === requestId);
+    const index = friendRequests.findIndex(
+      (request) => request.id === requestId
+    );
     if (index >= 0) {
       setFriendRequests((state) => {
         state[index].status = "ACCEPTED";
@@ -255,7 +297,9 @@ function ReceivedFriendRequests(props: {
           } friend-request`}
         >
           <span>
-            <Link to={`/user/@/${friendRequest.sender.publicId}`}>{friendRequest.sender.username}</Link>{" "}
+            <Link to={`/user/@/${friendRequest.sender.publicId}`}>
+              {friendRequest.sender.username}
+            </Link>{" "}
             {friendRequest.status === "ACCEPTED"
               ? "is now"
               : friendRequest.status === "DECLINED"
@@ -266,10 +310,16 @@ function ReceivedFriendRequests(props: {
           <span className="d-flex gap-2">
             {friendRequest.status === "WAITING" ? (
               <>
-                <button className="btn btn-outline-success" onClick={() => acceptFriendRequest(friendRequest.id)}>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => acceptFriendRequest(friendRequest.id)}
+                >
                   ACCEPT
                 </button>
-                <button className="btn btn-outline-danger" onClick={() => declineFriendRequest(friendRequest.id)}>
+                <button
+                  className="btn btn-outline-danger"
+                  onClick={() => declineFriendRequest(friendRequest.id)}
+                >
                   DECLINE
                 </button>
               </>
@@ -283,7 +333,10 @@ function ReceivedFriendRequests(props: {
   );
 }
 
-function ConfirmFriendRequestComponent(props: { username: string; close: () => void }) {
+function ConfirmFriendRequestComponent(props: {
+  username: string;
+  close: () => void;
+}) {
   const { data, isLoading, error } = trpc.user.searchUser.useQuery({
     username: props.username.trim().split(" ").join("_"),
   });
@@ -303,7 +356,9 @@ function ConfirmFriendRequestComponent(props: { username: string; close: () => v
 
   const sendFriendRequest = () => {
     if (data && data.ok) {
-      sendFriendRequestMut.mutate({ receiver: { publicId: data.value.publicId } });
+      sendFriendRequestMut.mutate({
+        receiver: { publicId: data.value.publicId },
+      });
     }
   };
 
@@ -314,10 +369,12 @@ function ConfirmFriendRequestComponent(props: { username: string; close: () => v
     return <small className="alert alert-danger py-0">An Error Occured.</small>;
   }
   if (sendFriendRequestMut.isSuccess) {
-    return <small className="alert alert-success py-0">Friend Request Sent</small>;
+    return (
+      <small className="alert alert-success py-0">Friend Request Sent</small>
+    );
   }
   return (
-    <div className={data.ok ? "overlay" : ""} style={{color: "black"}}>
+    <div className={data.ok ? "overlay" : ""} style={{ color: "black" }}>
       {data.ok ? (
         <div className="overlay-container">
           {requestError ? (
@@ -331,10 +388,16 @@ function ConfirmFriendRequestComponent(props: { username: string; close: () => v
             </p>
             <small>Public Id: {data.value.publicId}</small>
             <div className="d-flex justify-content-between mt-2">
-              <button className="btn btn-sm btn-outline-primary" onClick={sendFriendRequest}>
+              <button
+                className="btn btn-sm btn-outline-primary"
+                onClick={sendFriendRequest}
+              >
                 Send friend request
               </button>
-              <button className="btn btn-sm btn-outline-danger" onClick={props.close}>
+              <button
+                className="btn btn-sm btn-outline-danger"
+                onClick={props.close}
+              >
                 Cancel
               </button>
             </div>
@@ -346,4 +409,3 @@ function ConfirmFriendRequestComponent(props: { username: string; close: () => v
     </div>
   );
 }
-
