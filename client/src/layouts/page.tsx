@@ -6,7 +6,6 @@ import { SidebarComponent } from "./components/sidebar";
 import { Suspense, useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { getToken } from "@utils/token";
-import permissions from "@data/permission";
 
 export default function Page() {
   // load username to context
@@ -26,7 +25,6 @@ export default function Page() {
           </button>
         </div>
       )}
-      <RequestNotificationComponent />
       <div className={"page"}>
         <div className="sidebar">
           <div
@@ -49,24 +47,6 @@ export default function Page() {
   );
 }
 
-function RequestNotificationComponent() {
-  const [hasNotificationAccess, setHasNotificationAccess] = permissions.use("notifications");
-  useEffect(() => {
-    Notification.permission === "granted"? setHasNotificationAccess(state => ({...state, all: true})) : null;
-  }, [])
-  if (hasNotificationAccess.all) {
-    return null;
-  }
-  return (
-    <div className="alert alert-warning alert-sm py-0 rounded-0">
-      <small>
-        <Link to={"/user/settings#notifications"}>Turn on Notifications</Link>{" "}
-        to know when you have a message.
-      </small>
-    </div>
-  )
-}
-
 /** Load the user's email to `UserContext` */
 function loadUserDataToStore() {
   const user = trpc.user.getUserPrivate.useQuery(undefined, {
@@ -74,14 +54,16 @@ function loadUserDataToStore() {
     cacheTime: Infinity,
     onSuccess(data) {
       if (data.ok) {
-        store.setAll(data.value);
+        const prevState = store.getAll();
+        store.setAll({ ...prevState, ...data.value });
       }
     },
   });
 
   useEffect(() => {
     if (user.data && user.data.ok) {
-      store.setAll(user.data.value);
+      const prevState = store.getAll();
+      store.setAll({ ...prevState, ...user.data.value });
     }
   }, [user.data]);
 
