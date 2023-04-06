@@ -8,7 +8,6 @@ import { PrismaConn } from "./config/prisma";
 import socketHandler from "./socket";
 
 config();
-PrismaConn();
 
 export const env = {
   port: process.env.PORT,
@@ -27,7 +26,8 @@ export const io = new Server(httpServer, {
 
 socketHandler(io);
 
-httpServer.listen(env.port, () => {
-  Log.info(`live ::${env.port}`);
-});
-
+PrismaConn().then(() => 
+  httpServer.listen(env.port, () => {
+    Log.info(`live ::${env.port}`);
+  })
+);
