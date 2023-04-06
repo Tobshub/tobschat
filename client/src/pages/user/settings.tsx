@@ -1,16 +1,30 @@
-import permissions from "@data/permission";
 import store from "@data/zustand";
 import { trpc } from "@utils/trpc";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SettingsPage() {
   const publicId = store.get("publicId");
+  const [settings, setSettings] = store.use("settings");
   const user = trpc.user.getUserPublic.useQuery({ publicId });
-  const [hasNotificationPermission, setHasNotificationPermission] = permissions.use("notifications");
-  
+  const hasNotificationPermission = settings.notifications.all;
+
+  const handleNotificationPermissionChange = (permission: boolean) => {
+    if (!permission) {
+      setSettings((state) => ({
+        ...state,
+        notifications: { ...state.notifications, all: false },
+      }));
+      return;
+    }
+    setSettings((state) => ({
+      ...state,
+      notifications: { ...state.notifications, all: true },
+    }));
+  };
+
   if (!user.isLoading && (!user.data || !user.data.ok)) {
-    return <>An Error Occured</>
-  } 
+    return <>An Error Occured</>;
+  }
   return (
     <div>
       <h1>Settings</h1>
@@ -18,21 +32,28 @@ export default function SettingsPage() {
       <section>
         <h2 id="notifications">Notification Settings</h2>
         <div>
-          {!hasNotificationPermission.all? (
+          {!hasNotificationPermission ? (
             <>
               <span>Turn on Notifications</span>
-              <button className="btn btn-outline-primary" onClick={async () => {
-                const permission = await requestNotificationPermission();
-                console.log("CLICKED!")
-                if (permission) setHasNotificationPermission(state => ({...state, all: true}));
-              }}>On</button>
+              <button
+                className="btn btn-outline-primary"
+                onClick={async () => {
+                  const permission = await requestNotificationPermission();
+                  if (permission) handleNotificationPermissionChange(true);
+                }}
+              >
+                On
+              </button>
             </>
           ) : (
             <>
               <span>Turn Off Notifications</span>
-              <button className="btn btn-outline-primary" onClick={async () => {
-                setHasNotificationPermission(state => ({...state, all: false}));
-              }}>
+              <button
+                className="btn btn-outline-primary"
+                onClick={async () => {
+                  handleNotificationPermissionChange(false);
+                }}
+              >
                 Off
               </button>
             </>
@@ -45,7 +66,9 @@ export default function SettingsPage() {
 
 /** request notification permission */
 async function requestNotificationPermission() {
-  const permission = await Notification.requestPermission().then(perm => perm === "granted");
+  const permission = await Notification.requestPermission().then(
+    (perm) => perm === "granted"
+  );
   return permission;
 }
 
