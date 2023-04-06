@@ -4,11 +4,11 @@ const store = createGlobalStore<{
   username: string;
   publicId: string;
   email: string;
-  friends: { username: string; publicId: string }[];
+  friends: { username: string; publicId: string; online: boolean }[];
   settings: {
     notifications: {
       all: boolean;
-    }
+    };
   };
 }>({
   username: "",
@@ -18,9 +18,8 @@ const store = createGlobalStore<{
   settings: {
     notifications: {
       all: true,
-    }
-  }
+    },
+  },
 });
 
 export default store;
-
