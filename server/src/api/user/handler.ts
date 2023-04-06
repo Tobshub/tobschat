@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import appToken from "../../config/token";
 import { usePrisma } from "../../config/prisma";
+import Log from "../../config/log";
 
 export default function registerUserHandlers(io: Server, socket: Socket) {
   socket.on("user:load", async (token: string) => {
@@ -19,6 +20,7 @@ export default function registerUserHandlers(io: Server, socket: Socket) {
   socket.on("user:status", async (token: string, online: boolean) => {
     const user = appToken.validate(token);
     if (user.ok) {
+      Log.info(`User online status changed: ${online}`, `user: ${user.value.id}`)
       await usePrisma.user.update({
         where: { id: user.value.id },
         data: { online },

@@ -26,7 +26,7 @@ const SettingsPage = lazy(() => import("@pages/user/settings"));
 
 // TODO: Support for user's to edit their account information
 // Notifications when you receive a message
-// Friends' online status
+// FIXIT: Friends' online status
 // Usage instructions on the landing page
 const router = createBrowserRouter([
   {

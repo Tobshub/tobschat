@@ -32,9 +32,13 @@ ul:has(.friend-request) {
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
-  background-color: hsla(200, 87%, 80%, 0.404); 
-  padding: .2rem .4rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 5px;
+  background-color: hsla(200, 87%, 80%, 0.404);
+
+  &.offline {
+    opacity: 50%;
+  }
 
   a {
     text-decoration: none;

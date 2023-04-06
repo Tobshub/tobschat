@@ -29,7 +29,7 @@ export default function IndexPage() {
         <h2>Friends</h2>
       <ul className="navbar-nav">
         {user.friends.length ? (
-          user.friends.map((friend) => <FriendComponent key={friend.publicId} friend={friend}  />)
+          user.friends.map((friend) => <FriendComponent key={friend.publicId} friend={friend} className={friend.online? "online" : "offline"} />)
         ) : (
           <p>
             You don't have any friends yet.{" "}

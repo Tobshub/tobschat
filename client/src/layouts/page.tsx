@@ -80,13 +80,10 @@ function socketStatus() {
     socket.on("disconnect", () => {
       console.log("DISCONN!");
       setIsDisconnected(true);
-      socket.emit("user:status", token, false);
     });
     socket.on("connect", () => {
       console.log("CONN!");
       socket.emit("user:load", token);
-      // emit true online status on connection
-      socket.emit("user:status", token, true);
       setIsDisconnected(false);
     });
 
