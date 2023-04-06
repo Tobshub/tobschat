@@ -21,10 +21,15 @@ export default function registerUserHandlers(io: Server, socket: Socket) {
     const user = appToken.validate(token);
     if (user.ok) {
       Log.info(`User online status changed: ${online}`, `user: ${user.value.id}`)
-      await usePrisma.user.update({
+      const foundUser = await usePrisma.user.update({
         where: { id: user.value.id },
         data: { online },
+        select: {friendsOfIds: true, friendsWithIds: true, publicId: true}
       });
+      const friends = foundUser.friendsOfIds.concat(foundUser.friendsWithIds);
+      for (let friend of friends) {
+        io.to(friend).emit("friend:status", foundUser.publicId, online);
+      }
     }
   });
 }
