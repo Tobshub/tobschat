@@ -73,12 +73,6 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
 
   return (
     <TRPCProvider>

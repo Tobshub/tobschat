@@ -15,6 +15,14 @@ export default function Page() {
 
   const [isDisconnected, forceConnect] = socketStatus();
 
+  // connect to the socket on the first render
+  useEffect(() => {
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    }
+  }, [])
+
   return (
     <>
       {isDisconnected && (
