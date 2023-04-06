@@ -26,6 +26,7 @@ model User {
   sentFriendRequests     FriendRequest[] @relation(name: "Sender")
   receivedFriendRequests FriendRequest[] @relation(name: "Receiver")
   bio                    String          @default("Happy Chatter")
+  online                 Boolean         @default(false)
 }
 
 model FriendRequest {
