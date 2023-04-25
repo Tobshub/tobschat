@@ -63,5 +63,7 @@ export const roomRouter = tRouter({
 
       throw new tError({ code: "INTERNAL_SERVER_ERROR", message: res.message });
     }),
+  sendImage: authedProcedure
+    .input(z.object({ data: z.string(), name: z.string(), type: z.string() }))
+    .mutation(async ({ }) => {}),
 });
-
