@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -15,18 +19,35 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "rootDir": "..",
+    "rootDirs": [
+      "src",
+      "../server/src"
+    ],
     "baseUrl": "./src",
     "paths": {
-      "@server/*": ["../../server/src/*"],
-      "@utils/*": ["./utils/*"],
-      "@pages/*": ["./pages/*"],
-      "@layouts/*": ["./layouts/*"],
-      "@assets/*": ["./assets/*"],
-      "@data/*": ["./data/*"]
+      "@server/*": [
+        "../../server/src/*"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@pages/*": [
+        "./pages/*"
+      ],
+      "@layouts/*": [
+        "./layouts/*"
+      ],
+      "@assets/*": [
+        "./assets/*"
+      ],
+      "@data/*": [
+        "./data/*"
+      ]
     }
   },
-  "include": ["src", "../server/src", "../server/node_modules/.prisma/client"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
-

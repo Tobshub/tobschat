@@ -6,13 +6,12 @@
   "author": "Tobshub <tobanigeorge@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev:client": "cd client && yarn dev",
-    "dev:server": "cd server && yarn dev",
-    "concurrently": "concurrently \"yarn:dev:*\"",
+    "dev:client": "cd client && pnpm dev",
+    "dev:server": "cd server && pnpm dev",
+    "concurrently": "concurrently \"pnpm:dev:*\"",
     "dev": "./bin/dev-start.sh && yarn concurrently"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^8.0.1"
   }
 }
-
