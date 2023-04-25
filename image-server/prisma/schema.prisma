@@ -17,6 +17,7 @@ model Image {
   type           String
   url            String
   createdAt      DateTime @default(now())
+  duration       DateTime
   roomBlob       String
   senderPublicId String
 
