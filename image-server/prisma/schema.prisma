@@ -9,3 +9,16 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model Image {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  data           Bytes
+  name           String
+  type           String
+  url            String
+  createdAt      DateTime @default(now())
+  roomBlob       String
+  senderPublicId String
+
+  @@index(fields: [url])
+}
