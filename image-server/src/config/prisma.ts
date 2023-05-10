@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import logger from "./logger";
 
 /** Prisma Client wrapper */
@@ -15,5 +15,7 @@ export async function PrismaConn() {
       logger.error(e, "Prisma Client connection failed");
     });
 }
+
+export type Image = Prisma.ImageCreateInput;
 
 export default prisma;
