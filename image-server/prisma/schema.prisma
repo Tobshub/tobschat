@@ -20,6 +20,7 @@ model Image {
   duration       DateTime
   roomBlob       String
   senderPublicId String
+  acknowledged   Boolean
 
   @@index(fields: [url])
 }
