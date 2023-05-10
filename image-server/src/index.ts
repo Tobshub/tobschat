@@ -15,7 +15,7 @@ app.use(express.json({ limit: "5mb" }), cors());
 // upload router - upload images from rooms to the database
 app.post("/upload", uploadController);
 // retrive router - get images from the database using the image url and send the image data
-app.get("/img/:id", retrieveController);
+app.get("/img/:url", retrieveController);
 
 app.use("/", (_, res) => res.send("hello world"));
 
