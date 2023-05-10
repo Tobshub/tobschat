@@ -32,14 +32,10 @@ export default async function uploadController(req: Request, res: Response) {
       acknowledged: false,
     };
     await uploadImage(image).then((data) => {
-      if (data.ok) {
-        res.status(200).send({ url: data.value });
-        return;
-      }
-      res.status(500).send({ message: data.message });
+      res.status(data.ok ? 200 : 500).send(data);
     });
   } catch (err) {
-    res.status(400).send({ message: (err as Error).message });
+    res.status(400).send(Err((err as Error).message));
   }
 }
 
@@ -47,7 +43,7 @@ async function uploadImage(rawImage: Omit<Image, "url" | "data"> & { data: strin
   try {
     const url = createUrl();
     logger.info(`uploading image with url: ${url}`);
-    
+
     rawImage = imageType.parse(rawImage);
     await prisma.image.create({
       data: { ...rawImage, url, data: Buffer.from(rawImage.data, "base64") },
