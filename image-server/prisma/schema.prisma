@@ -13,6 +13,7 @@ datasource db {
 model Image {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   data           Bytes
+  length         Int
   name           String
   type           String
   url            String   @unique
