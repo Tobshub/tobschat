@@ -35,7 +35,7 @@ export default async function uploadController(req: Request, res: Response) {
       res.status(data.ok ? 200 : 500).send(data);
     });
   } catch (err) {
-    res.status(400).send(Err((err as Error).message));
+    res.status(400).send(Err());
   }
 }
 
