@@ -15,12 +15,10 @@ model Image {
   data           Bytes
   name           String
   type           String
-  url            String
+  url            String   @unique
   createdAt      DateTime @default(now())
   duration       DateTime
   roomBlob       String
   senderPublicId String
   acknowledged   Boolean
-
-  @@index(fields: [url])
 }
