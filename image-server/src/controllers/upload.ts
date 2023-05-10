@@ -39,14 +39,15 @@ export default async function uploadController(req: Request, res: Response) {
   }
 }
 
-async function uploadImage(rawImage: Omit<Image, "url" | "data"> & { data: string }) {
+async function uploadImage(image: Omit<Image, "url" | "data" | "length"> & { data: string }) {
   try {
     const url = createUrl();
     logger.info(`uploading image with url: ${url}`);
 
-    rawImage = imageType.parse(rawImage);
+    image = imageType.parse(image);
+    const data = Buffer.from(image.data, "base64");
     await prisma.image.create({
-      data: { ...rawImage, url, data: Buffer.from(rawImage.data, "base64") },
+      data: { ...image, url, data, length: data.length },
     });
 
     return Ok(url);
