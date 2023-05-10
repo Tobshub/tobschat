@@ -7,6 +7,7 @@ export async function sendMessage(messageProps: {
   content: string;
   key: string;
   roomBlob: string;
+  type: "TEXT" | "IMAGE";
 }) {
   try {
     await usePrisma.room.update({
@@ -17,6 +18,7 @@ export async function sendMessage(messageProps: {
             content: messageProps.content,
             key: messageProps.key,
             senderPublicId: messageProps.senderPublicId,
+            type: messageProps.type
           },
         },
       },

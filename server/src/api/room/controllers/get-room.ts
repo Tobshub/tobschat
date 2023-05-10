@@ -8,7 +8,9 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
       where: { blob: roomBlob },
       select: {
         name: true,
-        messages: { select: { content: true, senderPublicId: true, key: true, createdAt: true } },
+        messages: {
+          select: { content: true, senderPublicId: true, key: true, createdAt: true, type: true },
+        },
         members: { select: { username: true, publicId: true } },
         memberIds: true,
       },
@@ -26,7 +28,8 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
       name: room.name,
       // send at most 50 messages to the client at once
       // if there is no cursor take the last 50 messages
-      messages: cursor && cursor > 0 ? room.messages.slice(cursor, cursor + 50) : room.messages.slice(-50),
+      messages:
+        cursor && cursor > 0 ? room.messages.slice(cursor, cursor + 50) : room.messages.slice(-50),
       members: room.members,
     });
   } catch (err) {
@@ -34,4 +37,3 @@ export async function getRoom(userId: string, roomBlob: string, cursor?: number)
     return Err("an error occured");
   }
 }
-
