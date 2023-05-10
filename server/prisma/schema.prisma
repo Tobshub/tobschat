@@ -64,5 +64,11 @@ type Message {
   key            String
   senderPublicId String
   content        String
-  createdAt      DateTime @default(now())
+  createdAt      DateTime    @default(now())
+  type           MessageType
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
 }
