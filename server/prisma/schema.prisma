@@ -65,7 +65,7 @@ type Message {
   senderPublicId String
   content        String
   createdAt      DateTime    @default(now())
-  type           MessageType
+  type           MessageType @default(TEXT)
 }
 
 enum MessageType {
