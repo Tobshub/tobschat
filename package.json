@@ -8,8 +8,9 @@
   "scripts": {
     "dev:client": "cd client && pnpm dev",
     "dev:server": "cd server && pnpm dev",
-    "concurrently": "concurrently \"pnpm:dev:*\"",
-    "dev": "./bin/dev-start.sh && yarn concurrently"
+    "dev:img-server": "cd image-server && pnpm dev",
+    "concurry": "concurrently \"pnpm:dev:*\"",
+    "dev": "./bin/dev-start.sh && pnpm run concurry"
   },
   "devDependencies": {
     "concurrently": "^8.0.1"
