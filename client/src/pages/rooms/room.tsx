@@ -40,6 +40,7 @@ export default function RoomPage() {
       createdAt: new Date().toISOString(),
       senderPublicId: publicId,
       roomBlob,
+      type: "TEXT" as "TEXT" | "MEDIA"
     };
     socket.emit("room:message", message, getToken());
     setMessages((state) => [...state, message]);

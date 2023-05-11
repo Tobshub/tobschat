@@ -51,6 +51,7 @@ export const roomRouter = tRouter({
         content: z.string().min(1),
         roomBlob: z.string(),
         key: z.string(),
+      type: z.literal("TEXT").or(z.literal("MEDIA"))
       })
     )
     .mutation(async ({ input }) => {

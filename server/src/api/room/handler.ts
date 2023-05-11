@@ -7,7 +7,7 @@ export default function registerRoomHandlers(io: Server, socket: Socket) {
     socket.join(roomBlob);
   });
 
-  socket.on("room:message", (message: { roomBlob: string }) => {
+  socket.on("room:message", (message: { roomBlob: string, type: "TEXT" | "MEDIA" }) => {
     // broadcast new message to users in the room
     socket.broadcast.to(message.roomBlob).emit("room:message", message);
   });
